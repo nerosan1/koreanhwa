@@ -6,6 +6,7 @@ import DashboardPage from './pages/Dashboard';
 import Components from './pages/Components';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Admin from './components/admin/Admin';
 // import './App.css';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/admin" element={<Admin />} />
         <Route path="/dashboard" element={<Layout><DashboardPage /></Layout>} />
         <Route path="/components" element={<Layout><Components /></Layout>} />
         <Route path="/courses" element={<Layout><div className="text-center py-16"><h1 className="text-3xl font-bold">Courses</h1><p className="text-gray-600 mt-4">Courses page is under development...</p></div></Layout>} />
