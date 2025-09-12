@@ -80,6 +80,52 @@ const MyRoadmap = () => {
   const [hoveredCard, setHoveredCard] = useState(null);
   const [currentView, setCurrentView] = useState('roadmap'); // roadmap, stats, achievements
 
+  const achievements = [
+    {
+      id: 1,
+      title: 'Hoàn thành TOPIK I',
+      description: 'Đạt điểm 180/200 trong kỳ thi TOPIK I',
+      status: 'achieved',
+      date: '2025-07-15',
+      badge: 'gold',
+    },
+    {
+      id: 2,
+      title: 'Viết 10 bài blog',
+      description: 'Đăng ít nhất 10 bài blog chất lượng',
+      status: 'unachieved',
+      progress: 6,
+      total: 10,
+      badge: 'silver',
+    },
+    {
+      id: 3,
+      title: 'Học 500 từ vựng',
+      description: 'Nắm vững 500 từ vựng cơ bản',
+      status: 'unachieved',
+      progress: 320,
+      total: 500,
+      badge: 'bronze',
+    },
+    {
+      id: 4,
+      title: 'Tham gia 20 buổi học',
+      description: 'Tham dự ít nhất 20 buổi học trực tuyến',
+      status: 'achieved',
+      date: '2025-08-01',
+      badge: 'gold',
+    },
+    {
+      id: 5,
+      title: 'Đạt cấp 3 tiếng Hàn',
+      description: 'Hoàn thành cấp độ 3 trong lộ trình học',
+      status: 'unachieved',
+      progress: 75,
+      total: 100,
+      badge: 'silver',
+    },
+  ];
+
   // Enhanced learning levels data
   const learningLevels = [
     {
@@ -137,7 +183,7 @@ const MyRoadmap = () => {
     },
     {
       id: 3,
-      name: 'Sơ cấp 3',
+      name: 'Trung cấp 3',
       description: 'Giao tiếp nâng cao và văn hóa',
       progress: 0,
       completedDate: null,
@@ -160,7 +206,7 @@ const MyRoadmap = () => {
     },
     {
       id: 4,
-      name: 'Trung cấp 1',
+      name: 'Trung cấp 4',
       description: 'Giao tiếp chuyên sâu và kinh doanh',
       progress: 0,
       completedDate: null,
@@ -241,24 +287,14 @@ const MyRoadmap = () => {
 
   return (
     <StudentLayout>
-      <div className="space-y-8">
+      <div className="space-y-8 ">
         {/* Page Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold  text-black ">
               My Roadmap
             </h1>
             <p className="text-gray-600 mt-2 text-lg">Hành trình học tiếng Hàn của bạn</p>
-          </div>
-          <div className="flex items-center gap-4">
-            <button className="px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-2xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 hover:scale-105 shadow-lg flex items-center gap-2">
-              <Share2 className="w-5 h-5" />
-              Chia sẻ
-            </button>
-            <button className="px-6 py-3 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-2xl hover:from-gray-600 hover:to-gray-700 transition-all duration-300 hover:scale-105 shadow-lg flex items-center gap-2">
-              <Download className="w-5 h-5" />
-              Xuất báo cáo
-            </button>
           </div>
         </div>
 
@@ -477,127 +513,6 @@ const MyRoadmap = () => {
                 ))}
               </div>
             </div>
-
-            {/* Streak and Stats Row */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Streak Card */}
-              <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-orange-500 via-red-500 to-pink-500 p-6 text-white shadow-2xl">
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-pulse"></div>
-                <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl animate-bounce"></div>
-                
-                <div className="relative z-10">
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-sm">
-                        <Flame className="w-8 h-8 animate-pulse" />
-              </div>
-              <div>
-                        <h3 className="text-2xl font-bold bg-gradient-to-r from-white to-orange-100 bg-clip-text text-transparent">
-                          Streak học tập
-                        </h3>
-                        <p className="text-orange-100 text-sm">Duy trì động lực học tập</p>
-              </div>
-            </div>
-                    <button 
-                      onClick={() => setShowStreakDetails(!showStreakDetails)}
-                      className="p-3 bg-white/20 rounded-2xl backdrop-blur-sm hover:bg-white/30 transition-all duration-300 hover:scale-110"
-                    >
-                      {showStreakDetails ? <EyeOff className="w-6 h-6" /> : <Eye className="w-6 h-6" />}
-                    </button>
-        </div>
-
-                  <div className="grid grid-cols-3 gap-6 mb-6">
-                    <div className="text-center p-4 bg-white/10 rounded-2xl backdrop-blur-sm hover:bg-white/20 transition-all duration-300 hover:scale-105">
-                      <div className="text-4xl font-bold text-white mb-1">{streakData.currentStreak}</div>
-                      <div className="text-sm text-orange-100">Ngày hiện tại</div>
-                    </div>
-                    <div className="text-center p-4 bg-white/10 rounded-2xl backdrop-blur-sm hover:bg-white/20 transition-all duration-300 hover:scale-105">
-                      <div className="text-4xl font-bold text-white mb-1">{streakData.longestStreak}</div>
-                      <div className="text-sm text-orange-100">Kỷ lục</div>
-                    </div>
-                    <div className="text-center p-4 bg-white/10 rounded-2xl backdrop-blur-sm hover:bg-white/20 transition-all duration-300 hover:scale-105">
-                      <div className="text-4xl font-bold text-white mb-1">{streakData.totalStudyDays}</div>
-                      <div className="text-sm text-orange-100">Tổng ngày học</div>
-            </div>
-          </div>
-          
-                  {/* Today's Progress */}
-                  <div className="mb-6">
-                    <div className="flex justify-between text-sm mb-3">
-                      <span className="font-medium">Tiến độ hôm nay</span>
-                      <span className="font-bold">{streakData.todayProgress}/{streakData.todayGoal} phút</span>
-              </div>
-                    <div className="w-full bg-white/20 rounded-full h-3 overflow-hidden">
-                <div 
-                        className="bg-gradient-to-r from-white to-orange-200 h-3 rounded-full transition-all duration-1000 ease-out shadow-lg"
-                  style={{ width: `${(streakData.todayProgress / streakData.todayGoal) * 100}%` }}
-                ></div>
-              </div>
-                    <p className="text-sm text-orange-100 mt-2">
-                Còn {streakData.todayGoal - streakData.todayProgress} phút để hoàn thành mục tiêu
-              </p>
-            </div>
-                </div>
-              </div>
-
-              {/* Stats Card */}
-              <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 p-6 text-white shadow-2xl">
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-pulse"></div>
-                <div className="absolute -top-8 -right-8 w-24 h-24 bg-white/10 rounded-full blur-xl animate-bounce"></div>
-                
-                <div className="relative z-10">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-xl font-bold bg-gradient-to-r from-white to-purple-100 bg-clip-text text-transparent">
-                      Thống kê học tập
-                    </h3>
-                    <button className="text-white/80 hover:text-white text-sm font-medium transition-colors">
-                      Xem chi tiết
-                    </button>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div className="text-center p-4 bg-white/10 rounded-2xl backdrop-blur-sm">
-                      <div className="text-2xl font-bold">{learningStats.totalStudyTime}h</div>
-                      <div className="text-sm text-purple-100">Tổng thời gian học</div>
-              </div>
-                    <div className="text-center p-4 bg-white/10 rounded-2xl backdrop-blur-sm">
-                      <div className="text-2xl font-bold">{learningStats.totalLessons}</div>
-                      <div className="text-sm text-purple-100">Bài học đã hoàn thành</div>
-            </div>
-                    <div className="text-center p-4 bg-white/10 rounded-2xl backdrop-blur-sm">
-                      <div className="text-2xl font-bold">{learningStats.totalVocabulary}</div>
-                      <div className="text-sm text-purple-100">Từ vựng đã học</div>
-          </div>
-                    <div className="text-center p-4 bg-white/10 rounded-2xl backdrop-blur-sm">
-                      <div className="text-2xl font-bold">{learningStats.totalGrammar}</div>
-                      <div className="text-sm text-purple-100">Cấu trúc ngữ pháp</div>
-          </div>
-        </div>
-
-                  {/* Skills Chart */}
-                  <div className="h-48">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <RechartsPieChart>
-                        <Pie
-                          data={learningStats.skillDistribution}
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={40}
-                          outerRadius={80}
-                          paddingAngle={5}
-                          dataKey="value"
-                        >
-                          {learningStats.skillDistribution.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color} />
-                          ))}
-                        </Pie>
-                <Tooltip />
-                      </RechartsPieChart>
-            </ResponsiveContainer>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         )}
 
@@ -622,21 +537,61 @@ const MyRoadmap = () => {
 
         {currentView === 'achievements' && (
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-yellow-50 to-orange-50 p-8 shadow-2xl">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-yellow-400/20 to-orange-400/20 rounded-full blur-3xl animate-pulse"></div>
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-red-400/20 to-pink-400/20 rounded-full blur-2xl animate-bounce"></div>
+          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-yellow-400/20 to-orange-400/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-red-400/20 to-pink-400/20 rounded-full blur-2xl animate-bounce"></div>
+          
+          <div className="relative z-10">
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent mb-8">
+              Thành tích và huy hiệu
+            </h2>
             
-            <div className="relative z-10">
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent mb-8">
-                Thành tích và huy hiệu
-              </h2>
-              
-              <div className="text-center py-12">
-                <Trophy className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">Thành tích</h3>
-                <p className="text-gray-600">Danh sách thành tích và huy hiệu sẽ được hiển thị ở đây</p>
-              </div>
+            <div className="space-y-6">
+              {achievements.map((achievement) => (
+                <div
+                  key={achievement.id}
+                  className="flex items-center p-6 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  <div className={`w-16 h-16 rounded-full flex items-center justify-center ${achievement.status === 'achieved' ? 'bg-green-100' : 'bg-gray-100'}`}>
+                    {achievement.status === 'achieved' ? (
+                      <CheckCircle className="w-8 h-8 text-green-600" />
+                    ) : (
+                      <Clock className="w-8 h-8 text-gray-400" />
+                    )}
+                  </div>
+                  <div className="ml-4 flex-1">
+                    <h3 className="text-lg font-semibold text-gray-900">{achievement.title}</h3>
+                    <p className="text-sm text-gray-600">{achievement.description}</p>
+                    {achievement.status === 'achieved' ? (
+                      <p className="text-sm text-green-600 mt-1">Đã đạt: {new Date(achievement.date).toLocaleDateString('vi-VN')}</p>
+                    ) : (
+                      <div className="mt-2">
+                        <div className="w-full bg-gray-200 rounded-full h-2.5">
+                          <div
+                            className="bg-blue-600 h-2.5 rounded-full"
+                            style={{ width: `${(achievement.progress / achievement.total) * 100}%` }}
+                          ></div>
+                        </div>
+                        <p className="text-sm text-gray-500 mt-1">
+                          {achievement.progress}/{achievement.total}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="ml-4">
+                    <div
+                      className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                        achievement.badge === 'gold' ? 'bg-yellow-500' :
+                        achievement.badge === 'silver' ? 'bg-gray-300' : 'bg-orange-500'
+                      } text-white`}
+                    >
+                      <Award className="w-6 h-6" />
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
+        </div>
         )}
       </div>
     </StudentLayout>

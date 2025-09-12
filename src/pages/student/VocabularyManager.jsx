@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   BookMarked, 
   Plus, 
@@ -18,12 +19,14 @@ import {
   CheckCircle,
   XCircle,
   Eye,
-  EyeOff
+  EyeOff,
+  Play 
 } from 'lucide-react';
 import Card from '../../components/common/Card';
 import StudentLayout from '../../components/layout/StudentLayout';
 
 const VocabularyManager = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('list');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -31,6 +34,11 @@ const VocabularyManager = () => {
   const [currentFlashcard, setCurrentFlashcard] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
   const [favorites, setFavorites] = useState(new Set());
+  const [userInput, setUserInput] = useState(''); // For Nghe viết
+  const [userText, setUserText] = useState('');   // For Luyện viết
+  const [currentWordIndex, setCurrentWordIndex] = useState(0); // For Luyện viết word progression
+  const [feedback, setFeedback] = useState(''); 
+    // Feedback message for Luyện viết
 
   const categories = [
     { id: 'all', name: 'Tất cả' },
@@ -156,6 +164,25 @@ const VocabularyManager = () => {
   };
 
   const currentWord = filteredVocabulary[currentFlashcard];
+  const practiceWord = filteredVocabulary[currentWordIndex % filteredVocabulary.length];
+
+  const handleCheckAnswer = () => {
+    const trimmedInput = userText.trim();
+    if (trimmedInput === practiceWord.korean) {
+      setFeedback('Đúng! Chuyển sang từ tiếp theo.');
+      setUserText('');
+      setTimeout(() => {
+        setCurrentWordIndex(prev => prev + 1);
+        setFeedback('');
+      }, 1000);
+    } else {
+      setFeedback('Sai! Hãy thử lại. Gợi ý: ' + practiceWord.pronunciation);
+    }
+  };
+
+  const handleHint = () => {
+    setFeedback('Gợi ý: ' + practiceWord.pronunciation);
+  };
 
   const renderFlashcard = () => {
     if (!currentWord) return null;
@@ -291,6 +318,95 @@ const VocabularyManager = () => {
     );
   };
 
+  const renderListenWrite = () => {
+    const mockAudioUrl = 'https://example.com/sample-audio.mp3'; // Placeholder audio URL
+
+    return (
+      <Card className="p-6 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg">
+        <h3 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
+          Nghe viết
+        </h3>
+        <div className="space-y-6">
+          <div className="flex items-center space-x-4">
+            <button className="p-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all duration-300">
+              <Play className="w-5 h-5" />
+            </button>
+            <audio controls className="w-full">
+              <source src={mockAudioUrl} type="audio/mp3" />
+              Trình duyệt của bạn không hỗ trợ thẻ audio.
+            </audio>
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Viết lại những gì bạn nghe</label>
+            <textarea
+              value={userInput}
+              onChange={(e) => setUserInput(e.target.value)}
+              placeholder="Nhập văn bản ở đây..."
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 bg-white/80 backdrop-blur-sm h-32 resize-y"
+            />
+          </div>
+          <button className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all duration-300 hover:scale-105 shadow-lg">
+            Kiểm tra
+          </button>
+        </div>
+      </Card>
+    );
+  };
+
+  const renderPracticeWrite = () => {
+    return (
+      <Card className="p-6 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg">
+        <h3 className="text-xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-4">
+          Luyện viết
+        </h3>
+        <div className="space-y-6">
+          <div>
+            <p className="text-lg font-semibold text-gray-700 mb-2">Từ tiếng Việt: {practiceWord.vietnamese}</p>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Viết bằng tiếng Hàn</label>
+            <textarea
+              value={userText}
+              onChange={(e) => {
+                setUserText(e.target.value);
+                setFeedback(''); // Clear feedback when user starts typing
+              }}
+              placeholder="Nhập từ tiếng Hàn ở đây..."
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-300 bg-white/80 backdrop-blur-sm h-24 resize-y"
+            />
+            {feedback && (
+              <p className={`mt-2 text-sm ${feedback.includes('Đúng') ? 'text-green-600' : 'text-red-600'}`}>
+                {feedback}
+              </p>
+            )}
+          </div>
+          <div className="flex space-x-4">
+            <button
+              onClick={handleCheckAnswer}
+              className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all duration-300 hover:scale-105 shadow-lg"
+            >
+              Kiểm tra
+            </button>
+            <button
+              onClick={handleHint}
+              className="px-6 py-3 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-xl hover:from-gray-600 hover:to-gray-700 transition-all duration-300 hover:scale-105"
+            >
+              Gợi ý
+            </button>
+            <button
+              onClick={() => {
+                setUserText('');
+                setCurrentWordIndex(prev => prev + 1);
+                setFeedback('');
+              }}
+              className="px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 hover:scale-105"
+            >
+              Tiếp theo
+            </button>
+          </div>
+        </div>
+      </Card>
+    );
+  };
+
   return (
     <StudentLayout>
       <div className="space-y-6">
@@ -300,7 +416,9 @@ const VocabularyManager = () => {
             <h1 className="text-2xl font-bold text-gray-900">Quản lý từ vựng</h1>
             <p className="text-gray-600">Học và quản lý từ vựng cá nhân của bạn</p>
           </div>
-          <button className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+          <button 
+            onClick={() => navigate('/student/vocabulary/add')}
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
             <Plus className="w-4 h-4" />
             <span>Thêm từ mới</span>
           </button>
@@ -355,26 +473,46 @@ const VocabularyManager = () => {
         </div>
 
         {/* Tabs */}
-        <div className="flex space-x-1 border-b border-gray-200">
+        <div className="flex space-x-2 border-b border-gray-200">
           <button
             onClick={() => setActiveTab('list')}
-            className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-colors ${
+            className={`px-6 py-3 text-sm font-semibold rounded-t-xl transition-all duration-300 hover:scale-105 ${
               activeTab === 'list'
-                ? 'bg-blue-50 text-blue-700 border-b-2 border-blue-700'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-white/80 backdrop-blur-sm'
             }`}
           >
             Danh sách từ vựng
           </button>
           <button
             onClick={() => setActiveTab('flashcard')}
-            className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-colors ${
+            className={`px-6 py-3 text-sm font-semibold rounded-t-xl transition-all duration-300 hover:scale-105 ${
               activeTab === 'flashcard'
-                ? 'bg-blue-50 text-blue-700 border-b-2 border-blue-700'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-white/80 backdrop-blur-sm'
             }`}
           >
             Học bằng flashcard
+          </button>
+          <button
+            onClick={() => setActiveTab('listenWrite')}
+            className={`px-6 py-3 text-sm font-semibold rounded-t-xl transition-all duration-300 hover:scale-105 ${
+              activeTab === 'listenWrite'
+                ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-white/80 backdrop-blur-sm'
+            }`}
+          >
+            Nghe viết
+          </button>
+          <button
+            onClick={() => setActiveTab('practiceWrite')}
+            className={`px-6 py-3 text-sm font-semibold rounded-t-xl transition-all duration-300 hover:scale-105 ${
+              activeTab === 'practiceWrite'
+                ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-white/80 backdrop-blur-sm'
+            }`}
+          >
+            Luyện viết
           </button>
         </div>
 
@@ -429,7 +567,10 @@ const VocabularyManager = () => {
 
         {/* Content */}
         <div className="min-h-[400px]">
-          {activeTab === 'flashcard' ? renderFlashcard() : renderVocabularyList()}
+          {activeTab === 'list' && renderVocabularyList()}
+          {activeTab === 'flashcard' && renderFlashcard()}
+          {activeTab === 'listenWrite' && renderListenWrite()}
+          {activeTab === 'practiceWrite' && renderPracticeWrite()}
         </div>
 
         {/* Empty State */}
@@ -438,7 +579,8 @@ const VocabularyManager = () => {
             <BookMarked className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">Không tìm thấy từ vựng</h3>
             <p className="text-gray-500 mb-4">Thử thay đổi bộ lọc hoặc thêm từ vựng mới</p>
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+            <button
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
               Thêm từ vựng đầu tiên
             </button>
           </Card>
@@ -448,4 +590,4 @@ const VocabularyManager = () => {
   );
 };
 
-export default VocabularyManager; 
+export default VocabularyManager;

@@ -24,9 +24,18 @@ import AddRole from './pages/AddRole';
 import StudentDashboard from './pages/student/StudentDashboard';
 import LessonDetail from './pages/student/LessonDetail';
 import TOPIKPractice from './pages/student/TOPIKPractice';
+import StatisticsExamResults from './pages/student/StatisticsExamResults';
+import DetaillExamResult from './pages/student/DetaillExamResult';
+import AnswerDetailQuestion from './pages/student/AnswerDetailQuestion';
+import AnswerTestForm from './pages/student/AnswerTestForm';
+import DetailTest from './pages/student/DetailTest';
 import VocabularyManager from './pages/student/VocabularyManager';
+import AddVocabulary from './pages/student/AddVocabulary';
 import MaterialsPage from './pages/student/MaterialsPage';
 import BlogPage from './pages/student/BlogPage';
+import CreateBlog from './pages/student/CreateBlog';
+import ManageBlog from './pages/student/ManageBlog';
+import TestForm from './pages/student/TestForm';
 import MyRoadmap from './pages/student/MyRoadmap';
 import CompetitionPage from './pages/student/CompetitionPage2';
 import SettingsPage from './pages/student/SettingsPage';
@@ -64,9 +73,20 @@ function App() {
         <Route path="/student/roadmap" element={<MyRoadmap />} />
         <Route path="/student/lessons" element={<LessonDetail />} />
         <Route path="/student/topik" element={<TOPIKPractice />} />
+        <Route path="/student/topik/statistics" element={<StatisticsExamResults />} />
+        <Route path="/student/topik/StatisticsExamResults" element={<StatisticsExamResults />} />
+        <Route path="/student/topik/TestForm" element={<TestForm />} />
+        <Route path="/student/topik/DetailTest" element={<DetailTest />} />
+        <Route path="/student/topik/AnswerTestForm" element={<AnswerTestForm />} />
+        <Route path="/student/topik/DetaillExamResult" element={<DetaillExamResult />} />
+        <Route path="/student/topik/AnswerDetailQuestion" element={<AnswerDetailQuestion />} />
+
         <Route path="/student/vocabulary" element={<VocabularyManager />} />
+        <Route path="/student/vocabulary/add" element={<AddVocabulary />} />
         <Route path="/student/materials" element={<MaterialsPage />} />
         <Route path="/student/blog" element={<BlogPage />} />
+        <Route path="/student/blog/create" element={<CreateBlog />} />
+        <Route path="/student/blog/manage" element={<ManageBlog />} />
         <Route path="/student/competition" element={<CompetitionPage />} />
         <Route path="/student/settings" element={<SettingsPage />} />
         <Route path="/student/profile" element={<div className="text-center py-16"><h1 className="text-3xl font-bold">Hồ sơ cá nhân</h1><p className="text-gray-600 mt-4">Trang hồ sơ cá nhân đang được phát triển...</p></div>} />

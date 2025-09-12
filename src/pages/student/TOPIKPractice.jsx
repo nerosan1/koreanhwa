@@ -1,511 +1,248 @@
 import React, { useState } from 'react';
-import { 
-  Headphones, 
-  BookOpen, 
-  PenTool, 
-  BookMarked, 
-  Video,
-  Play,
-  Pause,
-  Volume2,
-  VolumeX,
-  Clock,
-  CheckCircle,
-  XCircle,
-  ArrowLeft,
-  ArrowRight,
-  Star,
-  Target,
-  BarChart3,
-  FileText,
-  Mic,
-  Brain
-} from 'lucide-react';
-import Card from '../../components/common/Card';
-import StudentLayout from '../../components/layout/StudentLayout';
+import { Search, User, Clock, Users, MessageCircle, BarChart3, Calculator } from 'lucide-react';
+import SearchBar from '../../components/common/SearchBar';
+import StudentLayout from "../../components/layout/StudentLayout";
+import {useNavigate} from 'react-router-dom';
+import ExamCard from '../../components/student/ExamCard';
 
-const TOPIKPractice = () => {
-  const [activeSkill, setActiveSkill] = useState('listening');
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  const [answers, setAnswers] = useState({});
-  const [showResults, setShowResults] = useState(false);
 
-  const skills = [
-    { id: 'listening', name: 'Nghe', icon: Headphones, color: 'blue' },
-    { id: 'reading', name: 'Đọc', icon: BookOpen, color: 'green' },
-    { id: 'writing', name: 'Viết', icon: PenTool, color: 'purple' },
-    { id: 'vocabulary', name: 'Từ vựng', icon: BookMarked, color: 'orange' },
-    { id: 'video', name: 'Video chữa đề', icon: Video, color: 'red' }
+const KoreanExamLibrary = () => {
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const examCategories = [
+    'Tất cả', 'TOPIK I', 'TOPIK II', 'KLAT', 'KBS', 'FLEX', 'KLPT', 'OPIc',
+    'S-TOPIK', 'SNULT', 'KOSTAT', 'KICE', 'KCT', 'KIIP', 'KIBS', 'Korean SAT',
+    'Sejong Institute', 'King Sejong', 'Hangeul Test', 'Korean Proficiency'
   ];
 
-  const mockQuestions = {
-    listening: [
-      {
-        id: 1,
-        type: 'audio',
-        question: 'Nghe đoạn hội thoại và chọn đáp án đúng:',
-        audioUrl: 'audio1.mp3',
-        options: [
-          'A. Người phụ nữ muốn mua một chiếc áo',
-          'B. Người phụ nữ muốn đổi chiếc áo',
-          'C. Người phụ nữ muốn trả lại chiếc áo',
-          'D. Người phụ nữ muốn thử chiếc áo'
-        ],
-        correct: 1,
-        explanation: 'Trong đoạn hội thoại, người phụ nữ nói "이 옷을 바꿔주세요" (Hãy đổi chiếc áo này cho tôi)'
-      },
-      {
-        id: 2,
-        type: 'audio',
-        question: 'Nghe và điền từ còn thiếu:',
-        audioUrl: 'audio2.mp3',
-        text: '안녕하세요, 저는 ___ 입니다.',
-        answer: '학생',
-        explanation: 'Dựa vào ngữ cảnh, từ còn thiếu là "학생" (học sinh)'
-      }
-    ],
-    reading: [
-      {
-        id: 3,
-        type: 'text',
-        question: 'Đọc đoạn văn và trả lời câu hỏi:',
-        text: `한국어는 한국의 공식 언어입니다. 한국어는 약 7,500만 명의 사람들이 사용하고 있습니다. 한국어는 조선어라고도 불리며, 한국과 조선민주주의인민공화국에서 사용됩니다.`,
-        question: '한국어를 사용하는 사람은 몇 명입니까?',
-        options: [
-          'A. 약 5,000만 명',
-          'B. 약 7,500만 명', 
-          'C. 약 1억 명',
-          'D. 약 1억 5천만 명'
-        ],
-        correct: 1,
-        explanation: 'Đoạn văn có ghi "약 7,500만 명" (khoảng 75 triệu người)'
-      }
-    ],
-    writing: [
-      {
-        id: 4,
-        type: 'essay',
-        question: 'Viết một đoạn văn ngắn (150-200 từ) về chủ đề: "내가 좋아하는 계절" (Mùa tôi thích)',
-        requirements: [
-          'Sử dụng từ vựng phù hợp',
-          'Cấu trúc câu đúng ngữ pháp',
-          'Ý tưởng rõ ràng, logic',
-          'Độ dài 150-200 từ'
-        ],
-        sampleAnswer: '저는 봄을 가장 좋아합니다. 봄에는 날씨가 따뜻하고 꽃들이 피어서 정말 아름답습니다...'
-      }
-    ],
-    vocabulary: [
-      {
-        id: 5,
-        type: 'multiple_choice',
-        question: 'Chọn từ đồng nghĩa với "아름답다":',
-        options: [
-          'A. 예쁘다',
-          'B. 크다',
-          'C. 작다', 
-          'D. 빠르다'
-        ],
-        correct: 0,
-        explanation: '"아름답다" và "예쁘다" đều có nghĩa là đẹp'
-      }
-    ]
-  };
-
-  const currentQuestions = mockQuestions[activeSkill] || [];
-  const currentQuestionData = currentQuestions[currentQuestion];
-
-  const handleAnswerSelect = (answerIndex) => {
-    setAnswers(prev => ({
-      ...prev,
-      [currentQuestionData.id]: answerIndex
-    }));
-  };
-
-  const handleSubmit = () => {
-    setShowResults(true);
-  };
-
-  const calculateScore = () => {
-    let correct = 0;
-    let total = 0;
-    
-    Object.keys(answers).forEach(questionId => {
-      const question = currentQuestions.find(q => q.id === parseInt(questionId));
-      if (question && answers[questionId] === question.correct) {
-        correct++;
-      }
-      total++;
-    });
-    
-    return { correct, total, percentage: total > 0 ? Math.round((correct / total) * 100) : 0 };
-  };
-
-  const score = calculateScore();
-
-  const renderQuestionContent = () => {
-    if (!currentQuestionData) return null;
-
-    switch (currentQuestionData.type) {
-      case 'audio':
-        return (
-          <div className="space-y-4">
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-medium">Câu hỏi {currentQuestion + 1}</h3>
-                <div className="flex items-center space-x-2">
-                  <button 
-                    onClick={() => setIsPlaying(!isPlaying)}
-                    className="p-2 bg-blue-100 rounded-full hover:bg-blue-200"
-                  >
-                    {isPlaying ? <Pause className="w-4 h-4 text-blue-600" /> : <Play className="w-4 h-4 text-blue-600" />}
-                  </button>
-                  <button 
-                    onClick={() => setIsMuted(!isMuted)}
-                    className="p-2 bg-gray-100 rounded-full hover:bg-gray-200"
-                  >
-                    {isMuted ? <VolumeX className="w-4 h-4 text-gray-600" /> : <Volume2 className="w-4 h-4 text-gray-600" />}
-                  </button>
-                </div>
-              </div>
-              <p className="text-gray-700 mb-4">{currentQuestionData.question}</p>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div className="bg-blue-600 h-2 rounded-full" style={{ width: '30%' }}></div>
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              {currentQuestionData.options?.map((option, index) => (
-                <label key={index} className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
-                  <input 
-                    type="radio" 
-                    name={`question-${currentQuestionData.id}`}
-                    checked={answers[currentQuestionData.id] === index}
-                    onChange={() => handleAnswerSelect(index)}
-                    className="text-blue-600"
-                  />
-                  <span className="text-gray-700">{option}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-        );
-
-      case 'text':
-        return (
-          <div className="space-y-4">
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h3 className="font-medium mb-2">Câu hỏi {currentQuestion + 1}</h3>
-              <div className="bg-white p-4 rounded border mb-4">
-                <p className="text-gray-700 leading-relaxed">{currentQuestionData.text}</p>
-              </div>
-              <p className="text-gray-700 font-medium">{currentQuestionData.question}</p>
-            </div>
-            
-            <div className="space-y-2">
-              {currentQuestionData.options?.map((option, index) => (
-                <label key={index} className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
-                  <input 
-                    type="radio" 
-                    name={`question-${currentQuestionData.id}`}
-                    checked={answers[currentQuestionData.id] === index}
-                    onChange={() => handleAnswerSelect(index)}
-                    className="text-blue-600"
-                  />
-                  <span className="text-gray-700">{option}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-        );
-
-      case 'essay':
-        return (
-          <div className="space-y-4">
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h3 className="font-medium mb-2">Câu hỏi {currentQuestion + 1}</h3>
-              <p className="text-gray-700 mb-4">{currentQuestionData.question}</p>
-              <div className="space-y-2">
-                <p className="text-sm font-medium text-gray-600">Yêu cầu:</p>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  {currentQuestionData.requirements.map((req, index) => (
-                    <li key={index} className="flex items-center space-x-2">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
-                      <span>{req}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Bài viết của bạn:
-              </label>
-              <textarea 
-                rows="8"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Viết bài luận của bạn ở đây..."
-              />
-              <div className="mt-2 flex items-center justify-between text-sm text-gray-500">
-                <span>Độ dài: 0/200 từ</span>
-                <button className="text-blue-600 hover:text-blue-800">
-                  <Brain className="w-4 h-4 inline mr-1" />
-                  AI sửa lỗi
-                </button>
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'multiple_choice':
-        return (
-          <div className="space-y-4">
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h3 className="font-medium mb-2">Câu hỏi {currentQuestion + 1}</h3>
-              <p className="text-gray-700">{currentQuestionData.question}</p>
-            </div>
-            
-            <div className="space-y-2">
-              {currentQuestionData.options?.map((option, index) => (
-                <label key={index} className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
-                  <input 
-                    type="radio" 
-                    name={`question-${currentQuestionData.id}`}
-                    checked={answers[currentQuestionData.id] === index}
-                    onChange={() => handleAnswerSelect(index)}
-                    className="text-blue-600"
-                  />
-                  <span className="text-gray-700">{option}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-        );
-
-      default:
-        return null;
+  const examData = [
+    {
+      title: 'TOPIK II Reading & Listening Test 01',
+      duration: '110 phút',
+      participants: 4521,
+      id: 'TK2001',
+      questions: '3 phần thi | 70 câu hỏi',
+      tags: ['TOPIK II', 'Reading', 'Listening']
+    },
+    {
+      title: 'TOPIK I Simulation Test 15',
+      duration: '100 phút',
+      participants: 2845,
+      id: 'TK1015',
+      questions: '2 phần thi | 70 câu hỏi',
+      tags: ['TOPIK I', 'Reading', 'Listening']
+    },
+    {
+      title: 'KLAT Korean Listening Practice 03',
+      duration: '45 phút',
+      participants: 1892,
+      id: 'KL003',
+      questions: '4 phần thi | 50 câu hỏi',
+      tags: ['KLAT', 'Listening']
+    },
+    {
+      title: 'TOPIK II Writing Practice Test 05',
+      duration: '70 phút',
+      participants: 1654,
+      id: 'TK2W05',
+      questions: '2 phần thi | 4 câu viết',
+      tags: ['TOPIK II', 'Writing']
+    },
+    {
+      title: 'OPIc Korean Speaking Level 7-8',
+      duration: '25 phút',
+      participants: 987,
+      id: 'OP78',
+      questions: '3 phần thi | 15 câu nói',
+      tags: ['OPIc', 'Speaking']
+    },
+    {
+      title: 'FLEX Korean Proficiency Mock Test',
+      duration: '120 phút',
+      participants: 2156,
+      id: 'FX001',
+      questions: '4 phần thi | 100 câu hỏi',
+      tags: ['FLEX', 'Comprehensive']
+    },
+    {
+      title: 'KBS Korean Broadcasting Test 02',
+      duration: '90 phút',
+      participants: 743,
+      id: 'KBS02',
+      questions: '3 phần thi | 60 câu hỏi',
+      tags: ['KBS', 'Broadcasting']
+    },
+    {
+      title: 'TOPIK I Grammar & Vocabulary 12',
+      duration: '40 phút',
+      participants: 3421,
+      id: 'TK1G12',
+      questions: '1 phần thi | 30 câu hỏi',
+      tags: ['TOPIK I', 'Grammar']
+    },
+    {
+      title: 'S-TOPIK Speaking Test Advanced',
+      duration: '30 phút',
+      participants: 1265,
+      id: 'STK01',
+      questions: '2 phần thi | 6 câu nói',
+      tags: ['S-TOPIK', 'Speaking']
+    },
+    {
+      title: 'KLPT Korean Language Test Level 4',
+      duration: '80 phút',
+      participants: 2089,
+      id: 'KLP4',
+      questions: '3 phần thi | 75 câu hỏi',
+      tags: ['KLPT', 'Level 4']
+    },
+    {
+      title: 'Sejong Institute Placement Test',
+      duration: '60 phút',
+      participants: 1543,
+      id: 'SJ001',
+      questions: '4 phần thi | 50 câu hỏi',
+      tags: ['Sejong Institute', 'Placement']
+    },
+    {
+      title: 'KIIP Korean Integration Program L3',
+      duration: '75 phút',
+      participants: 867,
+      id: 'KI03',
+      questions: '3 phần thi | 45 câu hỏi',
+      tags: ['KIIP', 'Integration']
+    },
+    {
+      title: 'Hangeul Proficiency Test Beginner',
+      duration: '50 phút',
+      participants: 2734,
+      id: 'HG001',
+      questions: '2 phần thi | 40 câu hỏi',
+      tags: ['Hangeul Test', 'Beginner']
     }
-  };
+  ];
 
-  const renderResults = () => {
-    return (
-      <div className="space-y-6">
-        <Card className="p-6">
-          <div className="text-center">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Kết quả bài thi</h3>
-            <div className="flex items-center justify-center space-x-8 mb-6">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-blue-600">{score.correct}</div>
-                <div className="text-sm text-gray-500">Đúng</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-red-600">{score.total - score.correct}</div>
-                <div className="text-sm text-gray-500">Sai</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-green-600">{score.percentage}%</div>
-                <div className="text-sm text-gray-500">Tỷ lệ đúng</div>
-              </div>
-            </div>
-            
-            <div className="w-full bg-gray-200 rounded-full h-3 mb-4">
-              <div 
-                className="bg-green-500 h-3 rounded-full transition-all duration-500"
-                style={{ width: `${score.percentage}%` }}
-              ></div>
-            </div>
-            
-            <div className="space-y-2">
-              <p className="text-lg font-medium text-gray-900">
-                {score.percentage >= 80 ? '🎉 Xuất sắc!' : 
-                 score.percentage >= 60 ? '👍 Tốt!' : 
-                 score.percentage >= 40 ? '📚 Cần cải thiện' : '💪 Cần luyện tập nhiều hơn'}
-              </p>
-              <p className="text-gray-600">
-                {score.percentage >= 80 ? 'Bạn đã làm rất tốt! Hãy tiếp tục duy trì.' :
-                 score.percentage >= 60 ? 'Kết quả khá tốt, hãy ôn tập thêm để cải thiện.' :
-                 score.percentage >= 40 ? 'Cần ôn tập lại kiến thức cơ bản.' : 'Hãy dành thêm thời gian học tập.'}
-              </p>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="p-6">
-          <h4 className="text-lg font-semibold text-gray-900 mb-4">Chi tiết từng câu</h4>
-          <div className="space-y-3">
-            {currentQuestions.map((question, index) => {
-              const userAnswer = answers[question.id];
-              const isCorrect = userAnswer === question.correct;
-              
-              return (
-                <div key={question.id} className="flex items-center justify-between p-3 border rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    {isCorrect ? (
-                      <CheckCircle className="w-5 h-5 text-green-600" />
-                    ) : (
-                      <XCircle className="w-5 h-5 text-red-600" />
-                    )}
-                    <span className="font-medium">Câu {index + 1}</span>
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    {isCorrect ? 'Đúng' : 'Sai'}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </Card>
-      </div>
-    );
-  };
+  // Lọc dữ liệu dựa trên tab và tìm kiếm
+  const filteredExams = examData.filter((exam) => {
+    const matchesTab = activeTab === 'all' || activeTab === 'Tất cả' || exam.tags.some((tag) => tag.includes(activeTab.replace('TOPIK ', '').replace('TOPIK', 'TOPIK')));
+    const matchesSearch = exam.title.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesTab && matchesSearch;
+  });
 
   return (
     <StudentLayout>
-      <div className="space-y-6">
+          <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-gray-50">
+      <div className="max-w-7xl mx-auto p-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Luyện đề TOPIK</h1>
-            <p className="text-gray-600">Luyện tập các kỹ năng thi TOPIK</p>
+        <div className="flex justify-between items-start mb-8">
+          <div className="flex-1">
+            <h1 className="text-4xl font-bold text-black mb-2">Thư viện đề thi tiếng Hàn</h1>
+            <p className="text-gray-600 mb-6">Đánh giá năng lực tiếng Hàn toàn diện</p>
+
+            {/* Category Tags */}
+            <div className="flex flex-wrap gap-2 mb-6">
+              {examCategories.map((category, index) => (
+                <button
+                  key={index}
+                  onClick={() => setActiveTab(category)}
+                  className={`px-4 py-2 rounded-full text-sm font-bold transition-all duration-200 ${
+                    activeTab === category || (activeTab === 'all' && category === 'Tất cả')
+                      ? 'bg-black text-white shadow-lg'
+                      : 'bg-white text-black hover:bg-yellow-100 border-2 border-gray-200 hover:border-yellow-400'
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+
+            {/* Search Bar */}
+            <SearchBar value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+
+            {/* Tabs */}
+            <div className="flex gap-8 border-b-2 border-gray-200">
+              <button
+                onClick={() => setActiveTab('all')}
+                className={`pb-3 font-bold transition-colors ${
+                  activeTab === 'all' || activeTab === 'Tất cả'
+                    ? 'text-black border-b-4 border-yellow-400'
+                    : 'text-gray-500 hover:text-black'
+                }`}
+              >
+                Tất cả
+              </button>
+              <button
+                onClick={() => setActiveTab('removed')}
+                className={`pb-3 font-bold transition-colors ${
+                  activeTab === 'removed'
+                    ? 'text-black border-b-4 border-yellow-400'
+                    : 'text-gray-500 hover:text-black'
+                }`}
+              >
+                Đã rút gọn
+              </button>
+            </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <Target className="w-5 h-5 text-blue-600" />
-            <span className="text-sm text-gray-500">Mục tiêu: TOPIK II</span>
+
+          {/* User Profile Card */}
+          <div className="bg-white rounded-xl p-6 shadow-xl border-2 border-gray-200 min-w-[320px] ml-6">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center">
+                <User className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <span className="font-bold text-black text-lg">nguyengocanh852002</span>
+                <div className="text-yellow-600 font-medium">Korean Learner</div>
+              </div>
+            </div>
+            
+            <div className="space-y-3 text-sm">
+              <div className="bg-yellow-50 p-3 rounded-lg">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-700 font-medium">Kỳ thi:</span>
+                  <span className="text-black font-bold">TOPIK II</span>
+                </div>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Ngày dự thi:</span>
+                <span className="text-black font-bold">15/04/2024 ✏️</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Tới kỳ thi:</span>
+                <span className="text-yellow-600 font-bold">45 ngày</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Điểm mục tiêu:</span>
+                <span className="text-black font-bold">Level 5 (230 điểm)</span>
+              </div>
+            </div>
+
+            <button
+              onClick={() => navigate('/student/topik/statistics')}
+             className="w-full mt-6 bg-yellow-400 text-black py-3 px-4 rounded-lg text-sm font-bold hover:bg-yellow-500 transition-colors flex items-center justify-center gap-2">
+              <BarChart3 className="w-4 h-4" />
+              Thống kê kết quả
+            </button>
           </div>
         </div>
 
-        {/* Skill Selection */}
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Chọn kỹ năng</h3>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {skills.map((skill) => {
-              const Icon = skill.icon;
-              return (
-                <button
-                  key={skill.id}
-                  onClick={() => {
-                    setActiveSkill(skill.id);
-                    setCurrentQuestion(0);
-                    setAnswers({});
-                    setShowResults(false);
-                  }}
-                  className={`p-4 rounded-lg border-2 transition-colors ${
-                    activeSkill === skill.id
-                      ? `border-${skill.color}-500 bg-${skill.color}-50 text-${skill.color}-700`
-                      : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
-                  }`}
-                >
-                  <div className="flex flex-col items-center space-y-2">
-                    <Icon className="w-6 h-6" />
-                    <span className="text-sm font-medium">{skill.name}</span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </Card>
-
-        {/* Main Content */}
-        {!showResults ? (
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            {/* Question Area */}
-            <div className="lg:col-span-3">
-              <Card className="p-6">
-                {renderQuestionContent()}
-              </Card>
+        {/* Exam Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+          {filteredExams.length > 0 ? (
+            filteredExams.map((exam, index) => <ExamCard key={index} exam={exam} />)
+          ) : (
+            <div className="col-span-full text-center py-12">
+              <p className="text-gray-600 text-lg">Không tìm thấy bài thi nào phù hợp.</p>
+              <p className="text-gray-500">Thử thay đổi từ khóa tìm kiếm hoặc chọn danh mục khác.</p>
             </div>
-
-            {/* Sidebar */}
-            <div className="space-y-6">
-              {/* Progress */}
-              <Card className="p-4">
-                <h4 className="font-medium text-gray-900 mb-3">Tiến độ</h4>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>Câu hỏi</span>
-                    <span>{currentQuestion + 1}/{currentQuestions.length}</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${((currentQuestion + 1) / currentQuestions.length) * 100}%` }}
-                    ></div>
-                  </div>
-                </div>
-              </Card>
-
-              {/* Navigation */}
-              <Card className="p-4">
-                <h4 className="font-medium text-gray-900 mb-3">Điều hướng</h4>
-                <div className="grid grid-cols-3 gap-2">
-                  {currentQuestions.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentQuestion(index)}
-                      className={`p-2 text-sm rounded ${
-                        currentQuestion === index
-                          ? 'bg-blue-600 text-white'
-                          : answers[currentQuestions[index]?.id] !== undefined
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                      }`}
-                    >
-                      {index + 1}
-                    </button>
-                  ))}
-                </div>
-              </Card>
-
-              {/* Actions */}
-              <Card className="p-4">
-                <div className="space-y-3">
-                  <button
-                    onClick={() => setCurrentQuestion(Math.max(0, currentQuestion - 1))}
-                    disabled={currentQuestion === 0}
-                    className="w-full flex items-center justify-center space-x-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <ArrowLeft className="w-4 h-4" />
-                    <span>Trước</span>
-                  </button>
-                  
-                  <button
-                    onClick={() => setCurrentQuestion(Math.min(currentQuestions.length - 1, currentQuestion + 1))}
-                    disabled={currentQuestion === currentQuestions.length - 1}
-                    className="w-full flex items-center justify-center space-x-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <span>Sau</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                  
-                  <button
-                    onClick={handleSubmit}
-                    className="w-full px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                  >
-                    Nộp bài
-                  </button>
-                </div>
-              </Card>
-
-              {/* Notes */}
-              <Card className="p-4">
-                <h4 className="font-medium text-gray-900 mb-3">Ghi chú</h4>
-                <textarea 
-                  rows="4"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                  placeholder="Ghi chú của bạn..."
-                />
-              </Card>
-            </div>
-          </div>
-        ) : (
-          renderResults()
-        )}
+          )}
+        </div>
       </div>
+    </div>
     </StudentLayout>
   );
 };
 
-export default TOPIKPractice; 
+export default KoreanExamLibrary;

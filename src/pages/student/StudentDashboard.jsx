@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from "framer-motion";
 import { 
   Target, 
   TrendingUp, 
@@ -28,6 +29,7 @@ import {
   TrendingDown,
   ArrowUp,
   ArrowDown,
+  Minus,
   Bell,
   BellOff,
   Heart,
@@ -38,51 +40,76 @@ import {
   Eye,
   EyeOff
 } from 'lucide-react';
-import { 
-  LineChart as RechartsLineChart, 
-  Line,
-  BarChart as RechartsBarChart, 
-  Bar,
-  PieChart as RechartsPieChart, 
-  Pie, 
-  Cell,
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  Legend, 
-  ResponsiveContainer,
-  AreaChart,
-  Area
-} from 'recharts';
+
 import Card from '../../components/common/Card';
 import StudentLayout from '../../components/layout/StudentLayout';
+import PointInfor from '../../components/student/PointInfor';
 
 const StudentDashboard = () => {
   const [showStreakDetails, setShowStreakDetails] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState('week');
-  const [hoveredCard, setHoveredCard] = useState(null);
+  
+const courses = [
+  {
+    color: 'blue',
+    date: '2025-09-01',
+    title: 'React Fundamentals',
+    description: 'Master the basics of building dynamic web apps with React.',
+    progress: 75,
+    lessons: [
+      { title: 'Introduction to React', progress: 100, completedDate: '2025-09-02' },
+      { title: 'Components & Props', progress: 50, completedDate: null },
+      { title: 'State & Lifecycle', progress: 75, completedDate: null },
+    ],
+  },
+  {
+    color: 'green',
+    date: '2025-08-15',
+    title: 'JavaScript Advanced',
+    description: 'Deep dive into modern JavaScript concepts and patterns.',
+    progress: 90,
+    lessons: [
+      { title: 'Closures & Scope', progress: 100, completedDate: '2025-08-16' },
+      { title: 'Async/Await', progress: 100, completedDate: '2025-08-20' },
+      { title: 'ES Modules', progress: 70, completedDate: null },
+    ],
+  },
+  {
+    color: 'purple',
+    date: '2025-07-10',
+    title: 'CSS Mastery',
+    description: 'Learn advanced CSS techniques for responsive designs.',
+    progress: 60,
+    lessons: [
+      { title: 'Flexbox Basics', progress: 100, completedDate: '2025-07-12' },
+      { title: 'Grid Layout', progress: 50, completedDate: null },
+      { title: 'Animations', progress: 30, completedDate: null },
+    ],
+  },
+  {
+    color: 'red',
+    date: '2025-06-20',
+    title: 'Node.js Essentials',
+    description: 'Build scalable backend applications with Node.js.',
+    progress: 85,
+    lessons: [
+      { title: 'Node.js Introduction', progress: 100, completedDate: '2025-06-21' },
+      { title: 'Express Framework', progress: 80, completedDate: null },
+      { title: 'REST APIs', progress: 75, completedDate: null },
+    ],
+  },
+];
 
-  // Enhanced learning progress data
+
+  // Dữ liệu Learning Progress (sửa color để hợp với Tailwind)
   const learningProgress = [
-    { skill: 'Nghe', progress: 75, hours: 24, target: 30, trend: 'up', change: 5, color: 'from-blue-500 to-cyan-500' },
-    { skill: 'Nói', progress: 60, hours: 18, target: 25, trend: 'up', change: 3, color: 'from-green-500 to-emerald-500' },
-    { skill: 'Đọc', progress: 85, hours: 32, target: 35, trend: 'stable', change: 0, color: 'from-purple-500 to-pink-500' },
-    { skill: 'Viết', progress: 45, hours: 12, target: 20, trend: 'down', change: -2, color: 'from-orange-500 to-red-500' }
+    { skill: 'Nghe', progress: 75, hours: 24, target: 30, trend: 'up', change: 5, color: 'cyan' },
+    { skill: 'Nói', progress: 60, hours: 18, target: 25, trend: 'up', change: 3, color: 'emerald' },
+    { skill: 'Đọc', progress: 85, hours: 32, target: 35, trend: 'stable', change: 0, color: 'pink' },
+    { skill: 'Viết', progress: 45, hours: 12, target: 20, trend: 'down', change: -2, color: 'red' }
   ];
 
-  // Enhanced weekly activity data
-  const weeklyActivity = [
-    { day: 'T2', lessons: 3, practice: 2, vocabulary: 15, streak: true, minutes: 45 },
-    { day: 'T3', lessons: 2, practice: 3, vocabulary: 20, streak: true, minutes: 60 },
-    { day: 'T4', lessons: 4, practice: 1, vocabulary: 12, streak: true, minutes: 30 },
-    { day: 'T5', lessons: 1, practice: 4, vocabulary: 25, streak: true, minutes: 75 },
-    { day: 'T6', lessons: 3, practice: 2, vocabulary: 18, streak: true, minutes: 50 },
-    { day: 'T7', lessons: 2, practice: 3, vocabulary: 22, streak: true, minutes: 40 },
-    { day: 'CN', lessons: 1, practice: 1, vocabulary: 10, streak: false, minutes: 25 }
-  ];
-
-  // Enhanced daily tasks
+  // Dữ liệu Daily Tasks
   const dailyTasks = [
     { id: 1, title: 'Học 20 từ vựng mới', completed: true, points: 50, type: 'vocabulary', difficulty: 'easy', color: 'from-blue-400 to-blue-600' },
     { id: 2, title: 'Luyện nghe 30 phút', completed: true, points: 30, type: 'listening', difficulty: 'medium', color: 'from-green-400 to-green-600' },
@@ -91,7 +118,17 @@ const StudentDashboard = () => {
     { id: 5, title: 'Luyện phát âm với AI', completed: false, points: 25, type: 'speaking', difficulty: 'medium', color: 'from-pink-400 to-pink-600' }
   ];
 
-  // Enhanced leaderboard
+  // Dữ liệu Các bài đã học (giả lập từ yêu cầu trước)
+  const [expandedCourses, setExpandedCourses] = useState({});
+
+    // Toggle details for a specific course
+    const toggleDetails = (index) => {
+      setExpandedCourses((prev) => ({
+        ...prev,
+        [index]: !prev[index],
+      }));
+    };
+  // Dữ liệu Leaderboard
   const leaderboard = [
     { rank: 1, name: 'Trần Thị B', level: 'Trung cấp 1', points: 2840, avatar: 'B', streak: 15, wins: 8, color: 'from-yellow-400 to-yellow-600' },
     { rank: 2, name: 'Lê Văn C', level: 'Sơ cấp 3', points: 2650, avatar: 'C', streak: 12, wins: 6, color: 'from-gray-400 to-gray-600' },
@@ -100,23 +137,13 @@ const StudentDashboard = () => {
     { rank: 5, name: 'Nguyễn Văn A', level: 'Sơ cấp 2', points: 2180, avatar: 'A', streak: 12, wins: 3, color: 'from-green-400 to-green-600' }
   ];
 
-  // Enhanced skill data
-  const skillData = [
-    { name: 'Nghe', value: 75, color: '#8884d8', target: 80 },
-    { name: 'Nói', value: 60, color: '#82ca9d', target: 70 },
-    { name: 'Đọc', value: 85, color: '#ffc658', target: 90 },
-    { name: 'Viết', value: 45, color: '#ff7300', target: 60 }
-  ];
-
-  // Streak data
+  // Dữ liệu Streak
   const streakData = {
     currentStreak: 12,
     longestStreak: 25,
     totalStudyDays: 89,
     todayGoal: 30,
     todayProgress: 25,
-    weeklyGoal: 180,
-    weeklyProgress: 165,
     streakHistory: [
       { date: '2024-01-01', studied: true, minutes: 45 },
       { date: '2024-01-02', studied: true, minutes: 60 },
@@ -142,24 +169,12 @@ const StudentDashboard = () => {
     ]
   };
 
-  // Recent achievements
+  // Dữ liệu Achievements
   const recentAchievements = [
-    { id: 1, title: 'Hoàn thành 50 bài học', description: 'Đã hoàn thành 50 bài học đầu tiên', icon: BookOpen, points: 100, date: '2024-01-15', color: 'from-yellow-400 to-orange-500' },
-    { id: 2, title: 'Streak 10 ngày', description: 'Duy trì học tập 10 ngày liên tiếp', icon: Flame, points: 50, date: '2024-01-14', color: 'from-red-400 to-pink-500' },
-    { id: 3, title: 'Thành thạo 100 từ vựng', description: 'Học thuộc 100 từ vựng cơ bản', icon: Target, points: 75, date: '2024-01-13', color: 'from-blue-400 to-cyan-500' }
+    { id: 1, title: 'Hoàn thành 50 bài học', description: 'Đã hoàn thành 50 bài học đầu tiên', icon: BookOpen, points: 100, date: '2024-01-15', color: 'bg-orange-500' },
+    { id: 2, title: 'Streak 10 ngày', description: 'Duy trì học tập 10 ngày liên tiếp', icon: Flame, points: 50, date: '2024-01-14', color: 'bg-pink-500' },
+    { id: 3, title: 'Thành thạo 100 từ vựng', description: 'Học thuộc 100 từ vựng cơ bản', icon: Target, points: 75, date: '2024-01-13', color: 'bg-cyan-500' }
   ];
-
-  const getProgressColor = (progress) => {
-    if (progress >= 80) return 'text-green-600';
-    if (progress >= 60) return 'text-yellow-600';
-    return 'text-red-600';
-  };
-
-  const getProgressBarColor = (progress) => {
-    if (progress >= 80) return 'bg-green-500';
-    if (progress >= 60) return 'bg-yellow-500';
-    return 'bg-red-500';
-  };
 
   const getTrendIcon = (trend) => {
     switch (trend) {
@@ -170,8 +185,7 @@ const StudentDashboard = () => {
   };
 
   const renderStreakCard = () => (
-    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-orange-500 via-red-500 to-pink-500 p-6 text-white shadow-2xl">
-      {/* Animated background elements */}
+    <div className="relative overflow-hidden rounded-2xl border border-gray-500 p-8 mb-8 bg-white">
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-pulse"></div>
       <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl animate-bounce"></div>
       <div className="absolute -bottom-10 -left-10 w-24 h-24 bg-white/10 rounded-full blur-xl animate-pulse"></div>
@@ -179,69 +193,63 @@ const StudentDashboard = () => {
       <div className="relative z-10">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-sm">
-              <Flame className="w-8 h-8 animate-pulse" />
+            <div className="p-3 bg-orange-500/20 rounded-2xl backdrop-blur-sm">
+              <Flame className="w-8 h-8 animate-pulse text-orange-500" />
             </div>
             <div>
-              <h3 className="text-2xl font-bold bg-gradient-to-r from-white to-orange-100 bg-clip-text text-transparent">
-                Streak học tập
-              </h3>
-              <p className="text-orange-100 text-sm">Duy trì động lực học tập</p>
+              <h3 className="text-2xl font-bold text-orange-500">Streak học tập</h3>
+              <p className="text-sm text-gray-600">Duy trì động lực học tập</p>
             </div>
           </div>
           <button 
             onClick={() => setShowStreakDetails(!showStreakDetails)}
             className="p-3 bg-white/20 rounded-2xl backdrop-blur-sm hover:bg-white/30 transition-all duration-300 hover:scale-110"
           >
-            {showStreakDetails ? <EyeOff className="w-6 h-6" /> : <Eye className="w-6 h-6" />}
+            {showStreakDetails ? <EyeOff className="w-6 h-6 text-orange-500" /> : <Eye className="w-6 h-6 text-orange-500" />}
           </button>
         </div>
 
-        <div className="grid grid-cols-3 gap-6 mb-6">
-          <div className="text-center p-4 bg-white/10 rounded-2xl backdrop-blur-sm hover:bg-white/20 transition-all duration-300 hover:scale-105">
-            <div className="text-4xl font-bold text-white mb-1">{streakData.currentStreak}</div>
-            <div className="text-sm text-orange-100">Ngày hiện tại</div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+          <div className="border border-orange-500 text-center p-4 bg-white/10 rounded-2xl backdrop-blur-sm hover:bg-white/20 transition-all duration-300 hover:scale-105">
+            <div className="text-4xl font-bold text-orange-500 mb-1">{streakData.currentStreak}</div>
+            <div className="text-sm text-gray-600">Ngày hiện tại</div>
           </div>
-          <div className="text-center p-4 bg-white/10 rounded-2xl backdrop-blur-sm hover:bg-white/20 transition-all duration-300 hover:scale-105">
-            <div className="text-4xl font-bold text-white mb-1">{streakData.longestStreak}</div>
-            <div className="text-sm text-orange-100">Kỷ lục</div>
+          <div className="border border-orange-500 text-center p-4 bg-white/10 rounded-2xl backdrop-blur-sm hover:bg-white/20 transition-all duration-300 hover:scale-105">
+            <div className="text-4xl font-bold text-orange-500 mb-1">{streakData.longestStreak}</div>
+            <div className="text-sm text-gray-600">Kỷ lục</div>
           </div>
-          <div className="text-center p-4 bg-white/10 rounded-2xl backdrop-blur-sm hover:bg-white/20 transition-all duration-300 hover:scale-105">
-            <div className="text-4xl font-bold text-white mb-1">{streakData.totalStudyDays}</div>
-            <div className="text-sm text-orange-100">Tổng ngày học</div>
+          <div className="border border-orange-500 text-center p-4 bg-white/10 rounded-2xl backdrop-blur-sm hover:bg-white/20 transition-all duration-300 hover:scale-105">
+            <div className="text-4xl font-bold text-orange-500 mb-1">{streakData.totalStudyDays}</div>
+            <div className="text-sm text-gray-600">Tổng ngày học</div>
           </div>
         </div>
 
-        {/* Today's Progress */}
         <div className="mb-6">
           <div className="flex justify-between text-sm mb-3">
-            <span className="font-medium">Tiến độ hôm nay</span>
-            <span className="font-bold">{streakData.todayProgress}/{streakData.todayGoal} phút</span>
+            <span className="font-medium text-gray-600">Tiến độ hôm nay</span>
+            <span className="font-bold text-gray-900">{streakData.todayProgress}/{streakData.todayGoal} phút</span>
           </div>
-          <div className="w-full bg-white/20 rounded-full h-3 overflow-hidden">
+          <div className="w-full rounded-full h-3 overflow-hidden bg-gray-200">
             <div 
-              className="bg-gradient-to-r from-white to-orange-200 h-3 rounded-full transition-all duration-1000 ease-out shadow-lg"
+              className="bg-green-500 h-3 rounded-full transition-all duration-1000 ease-out"
               style={{ width: `${(streakData.todayProgress / streakData.todayGoal) * 100}%` }}
             ></div>
           </div>
-          <p className="text-sm text-orange-100 mt-2">
+          <p className="text-sm text-gray-600 mt-2">
             Còn {streakData.todayGoal - streakData.todayProgress} phút để hoàn thành mục tiêu
           </p>
         </div>
 
         {showStreakDetails && (
           <div className="space-y-6 animate-fadeIn">
-            {/* Streak Calendar */}
             <div>
-              <h4 className="font-semibold mb-3 text-lg">Lịch sử 15 ngày gần nhất:</h4>
-              <div className="grid grid-cols-15 gap-2">
-                {streakData.streakHistory.slice(-15).map((day, index) => (
+              <h4 className="font-semibold mb-3 text-lg text-gray-900">Lịch sử 30 ngày gần nhất:</h4>
+              <div className="grid grid-cols-10 gap-2">
+                {streakData.streakHistory.slice(-30).map((day, index) => (
                   <div 
                     key={index}
                     className={`w-8 h-8 rounded-lg text-xs flex items-center justify-center transition-all duration-300 hover:scale-110 ${
-                      day.studied 
-                        ? 'bg-white text-orange-600 shadow-lg' 
-                        : 'bg-white/20 text-white'
+                      day.studied ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-600'
                     }`}
                     title={`${day.date}: ${day.studied ? `${day.minutes} phút học` : 'Không học'}`}
                   >
@@ -251,22 +259,21 @@ const StudentDashboard = () => {
               </div>
             </div>
 
-            {/* Milestones */}
             <div>
-              <h4 className="font-semibold mb-3 text-lg">Cột mốc streak:</h4>
-              <div className="grid grid-cols-2 gap-3">
+              <h4 className="font-semibold mb-3 text-lg text-gray-900">Cột mốc streak:</h4>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {streakData.milestones.map((milestone, index) => {
                   const Icon = milestone.icon;
                   return (
                     <div 
                       key={index}
                       className={`p-4 rounded-2xl backdrop-blur-sm transition-all duration-300 hover:scale-105 ${
-                        milestone.achieved ? 'bg-white/20' : 'bg-white/10'
+                        milestone.achieved ? 'bg-orange-500/20' : 'bg-gray-100'
                       }`}
                     >
-                      <Icon className={`w-6 h-6 mb-2 ${milestone.achieved ? 'text-yellow-300' : 'text-white/50'}`} />
-                      <div className="text-sm font-medium">{milestone.days} ngày</div>
-                      <div className="text-xs text-orange-100">{milestone.reward}</div>
+                      <Icon className={`w-6 h-6 mb-2 ${milestone.achieved ? 'text-orange-500' : 'text-gray-400'}`} />
+                      <div className="text-sm font-medium text-gray-900">{milestone.days} ngày</div>
+                      <div className="text-xs text-gray-600">{milestone.reward}</div>
                     </div>
                   );
                 })}
@@ -275,12 +282,11 @@ const StudentDashboard = () => {
           </div>
         )}
 
-        <div className="mt-6 pt-6 border-t border-white/20">
+        <div className="mt-6 pt-6 border-t border-gray-200">
           <div className="flex items-center justify-between">
-            <span className="text-sm">Tiếp theo: {streakData.milestones.find(m => !m.achieved)?.days} ngày</span>
-            <button className="px-4 py-2 bg-white/20 rounded-xl text-sm hover:bg-white/30 transition-all duration-300 hover:scale-105 backdrop-blur-sm">
-              Xem chi tiết
-            </button>
+            <span className="font-semibold text-lg text-orange-500">
+              Mục tiêu tiếp theo: {streakData.milestones.find(m => !m.achieved)?.days} ngày
+            </span>
           </div>
         </div>
       </div>
@@ -288,36 +294,37 @@ const StudentDashboard = () => {
   );
 
   const renderAchievementsCard = () => (
-    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 p-6 text-white shadow-2xl">
-      {/* Animated background elements */}
+    <div className="relative overflow-hidden rounded-2xl border border-gray-500 p-8 bg-white mb-8">
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-pulse"></div>
-      <div className="absolute -top-8 -right-8 w-24 h-24 bg-white/10 rounded-full blur-xl animate-bounce"></div>
       
       <div className="relative z-10">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xl font-bold bg-gradient-to-r from-white to-purple-100 bg-clip-text text-transparent">
-            Thành tích gần đây
-          </h3>
-          <button className="text-white/80 hover:text-white text-sm font-medium transition-colors">
+          <h3 className="text-xl font-bold text-green-700">Thành tích gần đây</h3>
+          <button className="text-green-700 hover:text-green-800 text-sm font-medium transition-colors">
             Xem tất cả
           </button>
         </div>
         
         <div className="space-y-4">
           {recentAchievements.map((achievement) => (
-            <div key={achievement.id} className="flex items-center gap-4 p-4 bg-white/10 rounded-2xl backdrop-blur-sm hover:bg-white/20 transition-all duration-300 hover:scale-105">
-              <div className={`p-3 rounded-2xl bg-gradient-to-br ${achievement.color}`}>
+            <div 
+              key={achievement.id} 
+              className="flex items-center gap-4 p-4 bg-white/10 rounded-2xl backdrop-blur-sm hover:bg-white/20 transition-all duration-300 hover:scale-105 border border-gray-200"
+            >
+              <div className={`p-3 rounded-2xl ${achievement.color}`}>
                 <achievement.icon className="w-6 h-6 text-white" />
               </div>
               <div className="flex-1">
-                <h4 className="font-semibold text-white">{achievement.title}</h4>
-                <p className="text-sm text-purple-100">{achievement.description}</p>
+                <h4 className="font-bold text-gray-900">{achievement.title}</h4>
+                <p className="text-sm text-gray-600">{achievement.description}</p>
                 <div className="flex items-center gap-3 mt-2">
-                  <span className="text-xs bg-white/20 px-2 py-1 rounded-full font-medium">+{achievement.points} điểm</span>
-                  <span className="text-xs text-purple-100">{achievement.date}</span>
+                  <span className="text-xs bg-gray-100 px-2 py-1 rounded-full font-medium text-gray-900">
+                    +{achievement.points} điểm
+                  </span>
+                  <span className="text-xs text-gray-600">{achievement.date}</span>
                 </div>
               </div>
-              <Award className="w-6 h-6 text-yellow-300" />
+              <Award className="w-6 h-6 text-yellow-500" />
             </div>
           ))}
         </div>
@@ -327,7 +334,7 @@ const StudentDashboard = () => {
 
   return (
     <StudentLayout>
-      <div className="space-y-8">
+      <div className="space-y-8 container mx-auto p-4">
         {/* Page Header */}
         <div className="flex items-center justify-between">
           <div>
@@ -337,131 +344,78 @@ const StudentDashboard = () => {
             <p className="text-gray-600 mt-2 text-lg">Chào mừng trở lại! Hãy tiếp tục hành trình học tiếng Hàn của bạn</p>
           </div>
           <div className="flex items-center gap-4">
-            <button className="px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-2xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 hover:scale-105 shadow-lg flex items-center gap-2">
+            <button className="px-6 py-3 bg-gradient-to-r rounded-lg bg-blue-700 hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 hover:scale-105 flex items-center gap-2 text-white">
               <Share2 className="w-5 h-5" />
               Chia sẻ
             </button>
-            <button className="px-6 py-3 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-2xl hover:from-gray-600 hover:to-gray-700 transition-all duration-300 hover:scale-105 shadow-lg flex items-center gap-2">
+            <button className="px-6 py-3 bg-gradient-to-r r rounded-lg bg-gray-500  hover:from-gray-600 hover:to-gray-700 transition-all duration-300 hover:scale-105 flex items-center gap-2 text-white">
               <Download className="w-5 h-5" />
               Xuất báo cáo
             </button>
           </div>
         </div>
 
-        {/* Streak and Stats Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            {renderStreakCard()}
-          </div>
-          <div>
-            {renderAchievementsCard()}
-          </div>
-        </div>
+        < PointInfor />
 
-        {/* Learning Progress */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-blue-50 to-purple-50 p-8 shadow-2xl">
-          {/* Animated background elements */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-pink-400/20 to-orange-400/20 rounded-full blur-2xl animate-bounce"></div>
-          
-          <div className="relative z-10">
-            <div className="flex items-center justify-between mb-8">
-              <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Tiến độ học tập
-              </h3>
-              <div className="flex items-center gap-3">
-                <select
-                  value={selectedPeriod}
-                  onChange={(e) => setSelectedPeriod(e.target.value)}
-                  className="px-4 py-2 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/80 backdrop-blur-sm"
-                >
-                  <option value="week">Tuần này</option>
-                  <option value="month">Tháng này</option>
-                  <option value="year">Năm nay</option>
-                </select>
-              </div>
-            </div>
+        {/* Streak Card */}
+        {renderStreakCard()}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              {learningProgress.map((skill, index) => (
-                <div 
-                  key={index} 
-                  className={`p-6 rounded-2xl bg-gradient-to-br ${skill.color} text-white shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 cursor-pointer`}
-                  onMouseEnter={() => setHoveredCard(index)}
-                  onMouseLeave={() => setHoveredCard(null)}
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <h4 className="font-bold text-lg">{skill.skill}</h4>
-                    {getTrendIcon(skill.trend)}
-                  </div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-3xl font-bold">{skill.progress}%</span>
-                    <span className={`text-sm font-medium ${skill.trend === 'up' ? 'text-green-200' : skill.trend === 'down' ? 'text-red-200' : 'text-gray-200'}`}>
-                      {skill.trend === 'up' ? '+' : skill.trend === 'down' ? '' : ''}{skill.change}%
-                    </span>
-                  </div>
-                  <div className="w-full bg-white/20 rounded-full h-2 mb-3">
-                    <div 
-                      className="bg-white h-2 rounded-full transition-all duration-1000 ease-out shadow-lg"
-                      style={{ width: `${skill.progress}%` }}
-                    ></div>
-                  </div>
-                  <div className="flex justify-between text-xs text-white/80">
-                    <span>{skill.hours}h học</span>
-                    <span>Mục tiêu: {skill.target}%</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Skills Chart */}
-            <div className="h-80">
-              <ResponsiveContainer width="100%" height="100%">
-                <RechartsPieChart>
-                  <Pie
-                    data={skillData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={80}
-                    outerRadius={120}
-                    paddingAngle={8}
-                    dataKey="value"
-                  >
-                    {skillData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </RechartsPieChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-        </div>
-
-        {/* Weekly Activity and Daily Tasks */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Weekly Activity */}
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-green-50 to-emerald-50 p-8 shadow-2xl">
-            <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-green-400/20 to-emerald-400/20 rounded-full blur-2xl animate-pulse"></div>
+        {/* Two Columns: Learning Progress and Daily Tasks */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* Learning Progress */}
+          <div className="relative overflow-hidden rounded-3xl bg-white p-8 border border-gray-200">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-pink-400/20 to-orange-400/20 rounded-full blur-2xl animate-bounce"></div>
             
             <div className="relative z-10">
-              <h3 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-6">
-                Hoạt động tuần này
-              </h3>
-              <div className="grid grid-cols-7 gap-3">
-                {weeklyActivity.map((day, index) => (
-                  <div key={index} className="text-center">
-                    <div className="text-sm font-medium text-gray-700 mb-2">{day.day}</div>
-                    <div className={`p-3 rounded-2xl transition-all duration-300 hover:scale-110 ${
-                      day.streak 
-                        ? 'bg-gradient-to-br from-green-400 to-emerald-500 text-white shadow-lg' 
-                        : 'bg-white/80 backdrop-blur-sm border border-gray-200'
-                    }`}>
-                      <div className="text-xs mb-1">Bài học: {day.lessons}</div>
-                      <div className="text-xs mb-1">Luyện tập: {day.practice}</div>
-                      <div className="text-xs mb-1">Từ vựng: {day.vocabulary}</div>
-                      <div className="text-xs mb-2">{day.minutes} phút</div>
-                      {day.streak && <Flame className="w-4 h-4 mx-auto animate-pulse" />}
+              <div className="flex items-center justify-between">
+                <h3 className="text-2xl font-bold text-blue-500">Tiến độ học tập</h3>
+                <div className="flex items-center gap-3">
+                  <select
+                    value={selectedPeriod}
+                    onChange={(e) => setSelectedPeriod(e.target.value)}
+                    className="px-4 py-2 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="week">Tuần này</option>
+                    <option value="month">Tháng này</option>
+                    <option value="year">Năm nay</option>
+                  </select>
+                </div>
+              </div>
+              <div className="mb-8 text-gray-600">
+                Đang trong quá trình học 
+                <span className="text-blue-500 font-bold"> Tiếng Hàn trung cấp 3</span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {learningProgress.map((skill, index) => (
+                  <div 
+                    key={index} 
+                    className={`p-6 rounded-2xl border-2 border-${skill.color}-500 bg-white hover: transition-all duration-300 hover:scale-105 cursor-pointer`}
+                    onMouseEnter={() => setHoveredCard(index)}
+                    onMouseLeave={() => setHoveredCard(null)}
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="font-bold text-lg text-gray-900">{skill.skill}</h4>
+                      {getTrendIcon(skill.trend)}
+                    </div>
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-3xl font-bold text-gray-900">{skill.progress}%</span>
+                      <span className={`text-sm font-medium ${
+                        skill.trend === 'up' ? 'text-green-600' : skill.trend === 'down' ? 'text-red-600' : 'text-gray-600'
+                      }`}>
+                        {skill.trend === 'up' ? '+' : ''}{skill.change}%
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
+                      <div 
+                        className={`bg-${skill.color}-500 h-2 rounded-full transition-all duration-1000 ease-out`}
+                        style={{ width: `${skill.progress}%` }}
+                      ></div>
+                    </div>
+                    <div className="flex justify-between text-xs text-gray-600">
+                      <span>{skill.hours}h học</span>
+                      <span>Mục tiêu: {skill.target}%</span>
                     </div>
                   </div>
                 ))}
@@ -470,34 +424,34 @@ const StudentDashboard = () => {
           </div>
 
           {/* Daily Tasks */}
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-orange-50 to-red-50 p-8 shadow-2xl">
+          <div className="relative overflow-hidden rounded-3xl bg-white p-8 border border-gray-200">
             <div className="absolute top-0 left-0 w-48 h-48 bg-gradient-to-br from-orange-400/20 to-red-400/20 rounded-full blur-2xl animate-bounce"></div>
-            
+
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
                   Nhiệm vụ hôm nay
                 </h3>
-                <span className="text-sm text-gray-600 bg-white/80 px-3 py-1 rounded-full backdrop-blur-sm">
+                <span className="text-sm bg-green-100 px-3 py-1 rounded-full text-green-700 font-bold">
                   {dailyTasks.filter(task => task.completed).length}/{dailyTasks.length} hoàn thành
                 </span>
               </div>
-              
+
               <div className="space-y-4">
                 {dailyTasks.map((task) => (
-                  <div 
-                    key={task.id} 
+                  <div
+                    key={task.id}
                     className={`flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 hover:scale-105 cursor-pointer ${
-                      task.completed 
-                        ? 'bg-gradient-to-r from-green-400 to-emerald-500 text-white shadow-lg' 
-                        : 'bg-white/80 backdrop-blur-sm border border-gray-200 hover:shadow-lg'
+                      task.completed
+                        ? `bg-gradient-to-r ${task.color} `
+                        : 'bg-white border border-green-200'
                     }`}
                   >
-                    <div className={`p-3 rounded-2xl ${
-                      task.completed 
-                        ? 'bg-white/20' 
-                        : 'bg-gradient-to-r from-gray-100 to-gray-200'
-                    }`}>
+                    <div
+                      className={`p-3 rounded-2xl ${
+                        task.completed ? 'bg-white/20' : 'bg-gray-100'
+                      }`}
+                    >
                       {task.completed ? (
                         <CheckCircle className="w-5 h-5 text-white" />
                       ) : (
@@ -509,24 +463,26 @@ const StudentDashboard = () => {
                         {task.title}
                       </h4>
                       <div className="flex items-center gap-2 mt-2">
-                        <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-                          task.completed 
-                            ? 'bg-white/20 text-white' 
-                            : 'bg-blue-100 text-blue-700'
-                        }`}>
+                        <span
+                          className={`text-xs px-2 py-1 rounded-full font-medium ${
+                            task.completed ? 'bg-white/20 text-white' : 'bg-blue-100 text-blue-700'
+                          }`}
+                        >
                           +{task.points} điểm
                         </span>
-                        <span className={`text-xs px-2 py-1 rounded-full ${
-                          task.difficulty === 'easy' ? 'bg-green-100 text-green-700' :
-                          task.difficulty === 'medium' ? 'bg-yellow-100 text-yellow-700' :
-                          'bg-red-100 text-red-700'
-                        }`}>
+                        <span
+                          className={`text-xs px-2 py-1 rounded-full ${
+                            task.difficulty === 'easy' ? 'bg-green-100 text-green-700' :
+                            task.difficulty === 'medium' ? 'bg-yellow-100 text-yellow-700' :
+                            'bg-red-100 text-red-700'
+                          }`}
+                        >
                           {task.difficulty === 'easy' ? 'Dễ' : task.difficulty === 'medium' ? 'Trung bình' : 'Khó'}
                         </span>
                       </div>
                     </div>
                     {!task.completed && (
-                      <button className="px-4 py-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl text-sm hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 hover:scale-105 shadow-lg">
+                      <button className="px-4 py-2 bg-blue-500 rounded-xl text-sm hover:bg-blue-600 transition-all duration-300 hover:scale-105 text-white">
                         Bắt đầu
                       </button>
                     )}
@@ -537,76 +493,192 @@ const StudentDashboard = () => {
           </div>
         </div>
 
-        {/* Leaderboard */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-50 to-purple-50 p-8 shadow-2xl">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-indigo-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse"></div>
-          
-          <div className="relative z-10">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                Bảng xếp hạng
-              </h3>
-              <button className="text-indigo-600 hover:text-indigo-700 text-sm font-medium transition-colors">
-                Xem tất cả
-              </button>
-            </div>
-            
-            <div className="space-y-4">
-              {leaderboard.map((user, index) => (
-                <div 
-                  key={user.rank} 
-                  className="flex items-center justify-between p-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200 hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer"
+        <div className='border border-green-500 rounded-3xl p-12 bg-white mb-8 '>
+          <h3 className="text-2xl font-bold text-green-700 mb-6">Các bài đã học</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {courses.map((course, index) => (
+                <div
+                  key={index}
+                  className={`p-6 rounded-2xl bg-${course.color}-100 border border-${course.color}-300`}
                 >
-                  <div className="flex items-center gap-4">
-                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-white font-bold text-lg shadow-lg bg-gradient-to-br ${user.color}`}>
-                      {user.rank}
-                    </div>
+                  <div className="space-y-3">
+                    <p className="text-sm text-gray-500">Start: {course.date}</p>
+                    <h2 className={`text-lg font-semibold text-${course.color}-600`}>
+                      {course.title}
+                    </h2>
+                    <p className="text-gray-600 text-sm">{course.description}</p>
+
+                    {/* Progress */}
                     <div>
-                      <div className="font-semibold text-gray-900">{user.name}</div>
-                      <div className="text-sm text-gray-600">{user.level} • {user.wins} chiến thắng</div>
+                      <div className="flex justify-between text-sm font-medium text-gray-700 mb-1">
+                        <span>Progress</span>
+                        <span>{course.progress}%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div
+                          className={`h-2 rounded-full bg-${course.color}-500`}
+                          style={{ width: `${course.progress}%` }}
+                        ></div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="font-bold text-gray-900 text-lg">{user.points} điểm</div>
-                    <div className="text-sm text-gray-600">Streak: {user.streak}</div>
+
+                    {/* Details Button */}
+                    <button
+                      onClick={() => toggleDetails(index)}
+                      className={`mt-3 text-${course.color}-600 hover:text-${course.color}-800 font-medium text-sm focus:outline-none`}
+                    >
+                      {expandedCourses[index] ? 'Ẩn Chi tiết' : 'Chi tiết'}
+                    </button>
+
+                    {/* Lessons Dropdown */}
+                    {expandedCourses[index] && (
+                      <div className="mt-4 space-y-3 transition-all duration-300 ease-in-out">
+                        {course.lessons.map((lesson, lessonIndex) => (
+                          <div
+                            key={lessonIndex}
+                            className={`flex items-center justify-between p-3 bg-${course.color}-50 rounded-lg hover:bg-${course.color}-100 transition-colors duration-200 border-l-4 border-${course.color}-300`}
+                          >
+                            <div className="flex-1 space-y-1">
+                              <p className="text-sm font-semibold text-gray-800">
+                                {lesson.title}
+                              </p>
+                              <p className="text-xs text-gray-600">
+                                Hoàn thành: {lesson.completedDate || 'Chưa hoàn thành'}
+                              </p>
+                              <p className="text-xs text-gray-600">
+                                Tiến trình: {lesson.progress}%
+                              </p>
+                            </div>
+                            <div
+                              className={`text-lg font-bold ${
+                                lesson.progress === 100
+                                  ? `text-${course.color}-600`
+                                  : 'text-red-500'
+                              }`}
+                            >
+                              {lesson.progress === 100 ? '✔' : '✘'}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
             </div>
-          </div>
         </div>
 
-        {/* Motivation Section */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 p-8 text-white shadow-2xl">
-          {/* Animated background elements */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-pulse"></div>
-          <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl animate-bounce"></div>
-          <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
-          
-          <div className="relative z-10 text-center">
-            <Sparkles className="w-16 h-16 mx-auto mb-6 animate-pulse" />
-            <h3 className="text-3xl font-bold mb-4 bg-gradient-to-r from-white to-purple-100 bg-clip-text text-transparent">
-              Bạn đang làm rất tốt!
-            </h3>
-            <p className="text-purple-100 mb-8 text-lg max-w-2xl mx-auto">
-              Với {streakData.currentStreak} ngày học liên tiếp, bạn đang trên đường đến thành công.
-              Hãy tiếp tục duy trì động lực này!
-            </p>
-            <div className="flex justify-center gap-6">
-              <button className="px-8 py-4 bg-white/20 rounded-2xl hover:bg-white/30 transition-all duration-300 hover:scale-110 backdrop-blur-sm flex items-center gap-3 shadow-lg">
-                <Target className="w-5 h-5" />
-                Đặt mục tiêu mới
-              </button>
-              <button className="px-8 py-4 bg-white/20 rounded-2xl hover:bg-white/30 transition-all duration-300 hover:scale-110 backdrop-blur-sm flex items-center gap-3 shadow-lg">
-                <Trophy className="w-5 h-5" />
-                Xem thành tích
-              </button>
+        {/* Achievements Card */}
+        {renderAchievementsCard()}
+
+      
+       {/* Leaderboard */}
+<div className="relative overflow-hidden rounded-3xl bg-white p-8 border border-gray-200 mx-auto">
+  <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-indigo-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse"></div>
+  <div className="relative z-10">
+    <div className="flex items-center justify-between mb-8">
+      <h3 className="text-3xl font-extrabold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+        Bảng xếp hạng
+      </h3>
+      <button className="text-indigo-600 hover:text-indigo-800 text-sm font-semibold transition-colors">
+        Xem tất cả
+      </button>
+    </div>
+        {/* Top 3 users */}
+    <div className="flex justify-center gap-10 mb-10">
+      {leaderboard.slice(0, 3).map((user, idx) => (
+        <div
+          key={user.rank}
+          className="relative bg-white shadow-lg rounded-3xl p-6 w-60 flex flex-col items-center text-center cursor-pointer hover:scale-105 transition-transform duration-300"
+        >
+          {/* Rank badge (larger, with shadow and distinct color) */}
+          <div
+            className={`absolute -top-6 flex items-center justify-center w-14 h-14 rounded-full font-bold text-xl text-white shadow-lg ${
+              idx === 0 ? "bg-yellow-400" : idx === 1 ? "bg-gray-400" : "bg-yellow-600"
+            }`}
+          >
+            {user.rank}
+          </div>
+          {/* Avatar */}
+          <img
+            src={user.avatar || `https://i.pravatar.cc/150?img=${user.rank + 10}`}
+            alt={user.name}
+            className="w-24 h-24 rounded-full object-cover mb-4 border-4 border-indigo-500"
+          />
+                    {/* Name */}
+          <div className="font-semibold text-lg text-gray-900 mb-1">{user.name}</div>
+          {/* Level và số chiến thắng */}
+          <div className="text-sm text-gray-600 mb-2">{user.level} • {user.wins} chiến thắng</div>
+          {/* Điểm và streak */}
+          <div className="font-bold text-indigo-700 text-lg">{user.points} điểm</div>
+          <div className="text-sm text-gray-500 mt-1">Streak: {user.streak} ngày</div>
+        </div>
+      ))}
+    </div>
+     {/* Danh sách người chơi thứ 4 trở đi */}
+    <div className="space-y-5">
+      {leaderboard.slice(3).map((user, i) => (
+        <motion.div
+          key={user.rank}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: i * 0.07, type: "spring", stiffness: 100 }}
+          className="flex items-center justify-between p-5 bg-white bg-opacity-90 backdrop-blur-md rounded-3xl border border-gray-200 shadow-sm hover:shadow-lg hover:scale-105 transition-transform duration-300 cursor-pointer"
+        >
+          {/* Left side */}
+          <div className="flex items-center gap-5">
+            {/* Avatar + Rank */}
+            <div className="relative flex-shrink-0">
+              <img
+                src={user.avatar}
+                alt={user.name}
+                className="w-14 h-14 rounded-full border-4 border-yellow-400 shadow-lg"
+              />
+              <span className="absolute -bottom-3 -right-3 w-8 h-8 rounded-full flex items-center justify-center text-sm font-extrabold bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg">
+                {user.rank}
+              </span>
+            </div>
+
+            {/* User info */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 truncate max-w-xs">
+                {user.name}
+              </h3>
+              <p className="text-sm text-gray-500">
+                Level {user.level} • {user.wins} chiến thắng
+              </p>
             </div>
           </div>
-        </div>
+
+          {/* Right side */}
+          <div className="text-right flex flex-col items-end gap-1">
+            <div className="flex items-center gap-2">
+              <span className="text-xl font-bold text-gray-900">
+                {user.points} điểm
+              </span>
+              {user.trend === "up" && (
+                <ArrowUp className="w-6 h-6 text-green-500" />
+              )}
+              {user.trend === "down" && (
+                <ArrowDown className="w-6 h-6 text-red-500" />
+              )}
+              {user.trend === "same" && (
+                <Minus className="w-6 h-6 text-gray-400" />
+              )}
+            </div>
+            <p className="text-sm text-gray-400 italic">Streak: {user.streak} ngày</p>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+
+
+      </div>
+    </div>
+
       </div>
     </StudentLayout>
   );
 };
 
-export default StudentDashboard; 
+export default StudentDashboard;
