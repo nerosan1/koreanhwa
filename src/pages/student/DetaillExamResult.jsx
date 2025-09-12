@@ -5,6 +5,7 @@ import StudentLayout from '../../components/layout/StudentLayout';
 import { useNavigate } from 'react-router-dom';
 import QuestionItem from '../../components/common/QuestionItem';// Import component mới
 import AnswerTestResult from './AnswerTestForm';
+import { useRef } from 'react';
 
 export default function KoreanTestDashboard() {
   const navigate = useNavigate();
@@ -109,6 +110,14 @@ export default function KoreanTestDashboard() {
     }
   };
 
+  const part5Ref = useRef(null);
+
+  const scrollToPart5 = () => {
+    if (part5Ref.current) {
+      part5Ref.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const handleEditComment = (id) => {
     setComments(comments.map(comment => 
       comment.id === id 
@@ -145,7 +154,7 @@ export default function KoreanTestDashboard() {
           </h1>
           
           <div className="flex gap-4 mb-6">
-            <button className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">
+            <button onClick={scrollToPart5} className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">
               Xem đáp án
             </button>
             <button
@@ -280,7 +289,7 @@ export default function KoreanTestDashboard() {
         <div className="mb-6">
           <h2 className="text-xl font-bold text-black mb-4">Phân tích chi tiết</h2>
           <div className="flex gap-2">
-            <button className="bg-yellow-100 border border-yellow-300 px-4 py-2 rounded text-black">
+            <button ref={part5Ref} className="bg-yellow-100 border border-yellow-300 px-4 py-2 rounded text-black">
               Part 5
             </button>
             <button className="border border-gray-300 px-4 py-2 rounded text-gray-700 hover:bg-gray-50">
@@ -494,6 +503,7 @@ export default function KoreanTestDashboard() {
           </div>
         </div>
       </div>
+      
     </StudentLayout>
   );
 }

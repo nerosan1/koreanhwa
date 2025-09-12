@@ -31,6 +31,13 @@ import AnswerTestForm from './pages/student/AnswerTestForm';
 import DetailTest from './pages/student/DetailTest';
 import VocabularyManager from './pages/student/VocabularyManager';
 import AddVocabulary from './pages/student/AddVocabulary';
+import TopikVocabularyLessons from './pages/student/TopikVocabularyLessons';
+import VocabularyLearning from './pages/student/VocabularyLearning';
+import VocabularyMatching from './pages/student/VocabularyMatching';
+import VocabularyQuiz from './pages/student/VocabularyQuiz.jsx';
+import VocabularyPronunciation from './pages/student/VocabularyPronunciation.jsx';
+import VocabularyWritting from './pages/student/VocabularyWritting.jsx';
+import VocabularyListenAndWrtie from './pages/student/VocabularyListenAndWriteQuiz.jsx';
 import MaterialsPage from './pages/student/MaterialsPage';
 import BlogPage from './pages/student/BlogPage';
 import CreateBlog from './pages/student/CreateBlog';
@@ -80,7 +87,13 @@ function App() {
         <Route path="/student/topik/AnswerTestForm" element={<AnswerTestForm />} />
         <Route path="/student/topik/DetaillExamResult" element={<DetaillExamResult />} />
         <Route path="/student/topik/AnswerDetailQuestion" element={<AnswerDetailQuestion />} />
-
+        <Route path="/student/topik/vocabulary-lessons" element={<TopikVocabularyLessons />} />
+        <Route path="/student/topik/vocabulary-learning" element={<VocabularyLearning />} />
+        <Route path="/student/topik/vocabulary-matching" element={<VocabularyMatching />} />
+        <Route path="/student/topik/vocabulary-quiz" element={<VocabularyQuiz />} />
+        <Route path="/student/topik/vocabulary-pronunciation" element={<VocabularyPronunciation />} />
+        <Route path="/student/topik/vocabulary-writing" element={<VocabularyWritting />} />
+        <Route path="/student/topik/vocabulary-listen-and-write" element={<VocabularyListenAndWrtie />} />
         <Route path="/student/vocabulary" element={<VocabularyManager />} />
         <Route path="/student/vocabulary/add" element={<AddVocabulary />} />
         <Route path="/student/materials" element={<MaterialsPage />} />
