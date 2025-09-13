@@ -86,18 +86,6 @@ const courses = [
       { title: 'Animations', progress: 30, completedDate: null },
     ],
   },
-  {
-    color: 'red',
-    date: '2025-06-20',
-    title: 'Node.js Essentials',
-    description: 'Build scalable backend applications with Node.js.',
-    progress: 85,
-    lessons: [
-      { title: 'Node.js Introduction', progress: 100, completedDate: '2025-06-21' },
-      { title: 'Express Framework', progress: 80, completedDate: null },
-      { title: 'REST APIs', progress: 75, completedDate: null },
-    ],
-  },
 ];
 
 

@@ -369,7 +369,7 @@ const CourseDetailPage = () => {
 
             {/* Students List */}
             <div className="bg-white rounded-xl border border-yellow-200 overflow-hidden">
-              <div className="p-4 border border-gray-200">
+              <div className="p-4 border-b border-gray-200">
                 <h3 className="text-lg font-semibold text-black">
                   Danh sách học viên ({filteredStudents.length})
                 </h3>
@@ -481,7 +481,7 @@ const CourseDetailPage = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`py-4 border-2 font-medium text-sm ${
+                  className={`py-4  font-medium text-sm ${
                     activeTab === tab.id
                       ? 'borderlack text-black-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700'

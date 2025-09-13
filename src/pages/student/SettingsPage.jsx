@@ -207,7 +207,7 @@ const SettingsPage = () => {
   const renderProfileTab = () => (
     <div className="space-y-6">
       {/* Avatar Section */}
-      <Card>
+      <Card className="p-10">
         <div className="flex items-center space-x-6">
           <div className="relative">
             <div className="w-24 h-24 bg-blue-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
@@ -233,7 +233,7 @@ const SettingsPage = () => {
       </Card>
 
       {/* Personal Information */}
-      <Card>
+      <Card className="p-10">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Thông tin cá nhân</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -294,7 +294,7 @@ const SettingsPage = () => {
       </Card>
 
       {/* Learning Profile */}
-      <Card>
+      <Card className="p-10">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Hồ sơ học tập</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -358,7 +358,7 @@ const SettingsPage = () => {
       </Card>
 
       {/* Bio and Interests */}
-      <Card>
+      <Card className="p-10">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Giới thiệu và sở thích</h3>
         <div className="space-y-4">
           <div>
@@ -401,7 +401,7 @@ const SettingsPage = () => {
   const renderMotivationTab = () => (
     <div className="space-y-6">
       {/* Streak Settings */}
-      <Card>
+      <Card className="p-10">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-gray-900">Cài đặt Streak</h3>
           <Flame className="w-6 h-6 text-orange-500" />
@@ -461,7 +461,7 @@ const SettingsPage = () => {
       </Card>
 
       {/* Achievement Settings */}
-      <Card>
+      <Card className="p-10">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Cài đặt thành tích</h3>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
@@ -515,7 +515,7 @@ const SettingsPage = () => {
       </Card>
 
       {/* Custom Rewards */}
-      <Card>
+      <Card className="p-10">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Phần thưởng tùy chỉnh</h3>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
@@ -566,7 +566,7 @@ const SettingsPage = () => {
       </Card>
 
       {/* Social Features */}
-      <Card>
+      <Card className="p-10">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Tính năng xã hội</h3>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
@@ -629,7 +629,7 @@ const SettingsPage = () => {
         return renderMotivationTab();
       default:
         return (
-          <Card>
+          <Card className="p-10">
             <div className="text-center py-12">
               <Settings className="w-16 h-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">Tính năng đang phát triển</h3>
@@ -642,7 +642,7 @@ const SettingsPage = () => {
 
   return (
     <StudentLayout>
-      <div className="space-y-6">
+      <div className="space-y-6 p-5 ">
         {/* Page Header */}
         <div className="flex items-center justify-between">
           <div>

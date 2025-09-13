@@ -27,29 +27,29 @@ const StudentLayout = ({ children }) => {
     {
       name: 'Học tập',
       items: [
-        { name: 'Dashboard', href: '/student/dashboard', icon: Home, description: 'Tổng quan học tập' },
-        { name: 'My Roadmap', href: '/student/roadmap', icon: TrendingUp, description: 'Hành trình học tập' },
-        { name: 'Bài học', href: '/student/lessons', icon: BookOpen, description: 'Học bài học theo cấp độ' },
-        { name: 'Luyện đề TOPIK', href: '/student/topik', icon: GraduationCap, description: 'Luyện thi TOPIK' },
-        { name: 'Từ vựng', href: '/student/vocabulary', icon: BookMarked, description: 'Quản lý từ vựng cá nhân' }
+        { name: 'Dashboard', href: '/student/dashboard', icon: Home },
+        { name: 'My Roadmap', href: '/student/roadmap', icon: TrendingUp },
+        { name: 'Bài học', href: '/student/lessons', icon: BookOpen },
+        { name: 'Luyện đề TOPIK', href: '/student/topik', icon: GraduationCap },
+        { name: 'Từ vựng', href: '/student/vocabulary', icon: BookMarked }
       ]
     },
     {
       name: 'Tài nguyên',
       items: [
-        { name: 'Tài liệu', href: '/student/materials', icon: FolderOpen, description: 'Tài liệu học tập' },
-        { name: 'Blog học viên', href: '/student/blog', icon: FileText, description: 'Chia sẻ kinh nghiệm học tập' }
+        { name: 'Tài liệu', href: '/student/materials', icon: FolderOpen },
+        { name: 'Blog học viên', href: '/student/blog', icon: FileText }
       ]
     },
     {
       name: 'Thi đua',
-      items: [{ name: 'Cuộc thi', href: '/student/competition', icon: Trophy, description: 'Tham gia cuộc thi học viên' }]
+      items: [{ name: 'Cuộc thi', href: '/student/competition', icon: Trophy }]
     },
     {
       name: 'Cá nhân',
       items: [
-        { name: 'Hồ sơ', href: '/student/profile', icon: User, description: 'Quản lý thông tin cá nhân' },
-        { name: 'Cài đặt', href: '/student/settings', icon: Settings, description: 'Tùy chỉnh hệ thống' }
+        { name: 'Hồ sơ', href: '/student/profile', icon: User },
+        { name: 'Cài đặt', href: '/student/settings', icon: Settings }
       ]
     }
   ];
@@ -73,7 +73,7 @@ const StudentLayout = ({ children }) => {
           ${collapsed ? 'w-20' : 'w-80'}`}
       >
         <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
-          {!collapsed && <h1 className="text-xl font-bold text-blue-600">Student Dashboard</h1>}
+          {!collapsed && <h1 className="text-xl font-bold text-Yellow-600">Student Dashboard</h1>}
           <div className="flex items-center space-x-2">
             {/* Collapse toggle button (desktop) */}
             <button
@@ -108,22 +108,21 @@ const StudentLayout = ({ children }) => {
                       <Link
                         key={item.name}
                         to={item.href}
-                        className={`group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
+                        className={`group flex items-center px-3 py-4 text-sm font-medium rounded-lg transition-colors duration-200 ${
                           isActive(item.href)
-                            ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
+                            ? 'bg-gray-700 text-white border-r-2 border-blue-700'
                             : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
                         }`}
                         onClick={() => setSidebarOpen(false)}
                       >
                         <Icon
                           className={`h-5 w-5 flex-shrink-0 ${
-                            isActive(item.href) ? 'text-blue-700' : 'text-gray-400 group-hover:text-gray-500'
+                            isActive(item.href) ? 'text-white' : 'text-gray-400 group-hover:text-gray-500'
                           }`}
                         />
                         {!collapsed && (
                           <div className="flex-1 ml-3">
                             <div className="font-medium">{item.name}</div>
-                            <div className="text-xs text-gray-500 mt-1">{item.description}</div>
                           </div>
                         )}
                       </Link>
