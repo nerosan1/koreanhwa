@@ -23,10 +23,25 @@ import {
   Book,
   FileText,
   Video,
-  Mic
+  Mic,
+  User
 } from 'lucide-react';
-import Card from '../../components/common/Card';
-import StudentLayout from '../../components/layout/StudentLayout';
+
+const Card = ({ children, className = "" }) => {
+  return (
+    <div className={`bg-white border border-gray-200 rounded-lg shadow-sm ${className}`}>
+      {children}
+    </div>
+  );
+};
+
+const StudentLayout = ({ children }) => {
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {children}
+    </div>
+  );
+};
 
 const LessonDetail = () => {
   const [activeTab, setActiveTab] = useState('video');
@@ -79,23 +94,17 @@ const LessonDetail = () => {
     ]
   };
 
-  const lessonList = {
-    beginner: [
-      { id: 1, title: 'Bài 1: Chào hỏi cơ bản', completed: true, current: true },
-      { id: 2, title: 'Bài 2: Giới thiệu bản thân', completed: false, current: false },
-      { id: 3, title: 'Bài 3: Số đếm cơ bản', completed: false, current: false },
-      { id: 4, title: 'Bài 4: Thời gian', completed: false, current: false },
-      { id: 5, title: 'Bài 5: Gia đình', completed: false, current: false }
-    ],
-    intermediate: [
-      { id: 6, title: 'Bài 6: Ngữ pháp nâng cao', completed: false, current: false },
-      { id: 7, title: 'Bài 7: Giao tiếp hàng ngày', completed: false, current: false }
-    ],
-    advanced: [
-      { id: 8, title: 'Bài 8: Văn hóa Hàn Quốc', completed: false, current: false },
-      { id: 9, title: 'Bài 9: Thương mại', completed: false, current: false }
-    ]
-  };
+const lessonList = [
+  { id: 1, title: 'Bài 1: Chào hỏi cơ bản', completed: true, current: true },
+  { id: 2, title: 'Bài 2: Giới thiệu bản thân', completed: false, current: false, unlocked: true },
+  { id: 3, title: 'Bài 3: Số đếm cơ bản', completed: false, current: false, unlocked: false },
+  { id: 4, title: 'Bài 4: Thời gian', completed: false, current: false, unlocked: false },
+  { id: 5, title: 'Bài 5: Gia đình', completed: false, current: false, unlocked: false },
+  { id: 6, title: 'Bài 6: Ngữ pháp nâng cao', completed: false, current: false, unlocked: false },
+  { id: 7, title: 'Bài 7: Giao tiếp hàng ngày', completed: false, current: false, unlocked: false },
+  { id: 8, title: 'Bài 8: Văn hóa Hàn Quốc', completed: false, current: false, unlocked: false },
+  { id: 9, title: 'Bài 9: Thương mại', completed: false, current: false, unlocked: false }
+];
 
   const relatedSuggestions = [
     { id: 1, title: 'Bài học về ngữ pháp', type: 'grammar', level: 'Sơ cấp 1' },
@@ -118,33 +127,33 @@ const LessonDetail = () => {
         return (
           <div className="space-y-4">
             <div className="relative bg-black rounded-lg overflow-hidden">
-              <div className="aspect-video bg-gray-900 flex items-center justify-center">
+              <div className="aspect-video bg-black flex items-center justify-center">
                 <div className="text-center">
-                  <Play className="w-16 h-16 text-white mx-auto mb-4" />
+                  <Play className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
                   <p className="text-white">Video bài giảng</p>
                 </div>
               </div>
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <button onClick={() => setIsMuted(!isMuted)} className="text-white">
+                    <button onClick={() => setIsMuted(!isMuted)} className="text-white hover:text-yellow-400">
                       {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
                     </button>
                     <div className="w-32 bg-gray-600 rounded-full h-1">
-                      <div className="bg-white h-1 rounded-full" style={{ width: '30%' }}></div>
+                      <div className="bg-yellow-400 h-1 rounded-full" style={{ width: '30%' }}></div>
                     </div>
                   </div>
-                  <button onClick={() => setIsFullscreen(!isFullscreen)} className="text-white">
+                  <button onClick={() => setIsFullscreen(!isFullscreen)} className="text-white hover:text-yellow-400">
                     {isFullscreen ? <Minimize className="w-5 h-5" /> : <Maximize className="w-5 h-5" />}
                   </button>
                 </div>
               </div>
             </div>
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">{lessonData.title}</h3>
+              <h3 className="text-lg font-semibold text-black">{lessonData.title}</h3>
               <div className="flex items-center space-x-2">
-                <Clock className="w-4 h-4 text-gray-500" />
-                <span className="text-sm text-gray-500">{lessonData.duration}</span>
+                <Clock className="w-4 h-4 text-black" />
+                <span className="text-sm text-black">{lessonData.duration}</span>
               </div>
             </div>
           </div>
@@ -154,27 +163,27 @@ const LessonDetail = () => {
         return (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">Từ vựng bài học</h3>
+              <h3 className="text-lg font-semibold text-black">Từ vựng bài học</h3>
               <button 
                 onClick={() => setShowVocabularyModal(true)}
-                className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                className="bg-yellow-400 text-black px-4 py-2 rounded-lg hover:bg-yellow-500 text-sm font-medium"
               >
                 Học bằng flashcard
               </button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {lessonData.vocabulary.map((word, index) => (
-                <Card key={index} className="p-4">
+                <Card key={index} className="p-4 border border-black">
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <h4 className="font-medium text-lg">{word.korean}</h4>
-                      <button className="text-gray-400 hover:text-gray-600">
+                      <h4 className="font-medium text-lg text-black">{word.korean}</h4>
+                      <button className="text-black hover:text-yellow-400">
                         <Volume2 className="w-4 h-4" />
                       </button>
                     </div>
-                    <p className="text-gray-600">{word.vietnamese}</p>
-                    <p className="text-sm text-gray-500">{word.pronunciation}</p>
-                    <p className="text-xs text-gray-400 italic">{word.example}</p>
+                    <p className="text-black font-medium">{word.vietnamese}</p>
+                    <p className="text-sm text-black bg-yellow-100 px-2 py-1 rounded">{word.pronunciation}</p>
+                    <p className="text-xs text-black italic bg-gray-100 px-2 py-1 rounded">{word.example}</p>
                   </div>
                 </Card>
               ))}
@@ -185,30 +194,30 @@ const LessonDetail = () => {
       case 'listening':
         return (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Luyện nghe</h3>
+            <h3 className="text-lg font-semibold text-black">Luyện nghe</h3>
             <div className="space-y-4">
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-medium mb-2">Bài tập 1: Nghe và chọn đáp án đúng</h4>
+              <div className="bg-yellow-50 border border-black p-4 rounded-lg">
+                <h4 className="font-medium mb-2 text-black">Bài tập 1: Nghe và chọn đáp án đúng</h4>
                 <div className="space-y-2">
-                  <p className="text-sm text-gray-600">Nghe câu sau và chọn nghĩa đúng:</p>
+                  <p className="text-sm text-black">Nghe câu sau và chọn nghĩa đúng:</p>
                   <div className="flex items-center space-x-2">
-                    <button className="p-2 bg-blue-100 rounded-full">
-                      <Play className="w-4 h-4 text-blue-600" />
+                    <button className="p-2 bg-yellow-400 rounded-full hover:bg-yellow-500">
+                      <Play className="w-4 h-4 text-black" />
                     </button>
-                    <span className="text-sm">안녕하세요, 저는 마이클입니다.</span>
+                    <span className="text-sm text-black font-medium">안녕하세요, 저는 마이클입니다.</span>
                   </div>
                   <div className="space-y-2 mt-4">
                     <label className="flex items-center space-x-2">
-                      <input type="radio" name="listening1" className="text-blue-600" />
-                      <span className="text-sm">A. Xin chào, tôi là Michael</span>
+                      <input type="radio" name="listening1" className="accent-yellow-400" />
+                      <span className="text-sm text-black">A. Xin chào, tôi là Michael</span>
                     </label>
                     <label className="flex items-center space-x-2">
-                      <input type="radio" name="listening1" className="text-blue-600" />
-                      <span className="text-sm">B. Tạm biệt, tôi là Michael</span>
+                      <input type="radio" name="listening1" className="accent-yellow-400" />
+                      <span className="text-sm text-black">B. Tạm biệt, tôi là Michael</span>
                     </label>
                     <label className="flex items-center space-x-2">
-                      <input type="radio" name="listening1" className="text-blue-600" />
-                      <span className="text-sm">C. Cảm ơn, tôi là Michael</span>
+                      <input type="radio" name="listening1" className="accent-yellow-400" />
+                      <span className="text-sm text-black">C. Cảm ơn, tôi là Michael</span>
                     </label>
                   </div>
                 </div>
@@ -220,15 +229,15 @@ const LessonDetail = () => {
       case 'grammar':
         return (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Ngữ pháp</h3>
+            <h3 className="text-lg font-semibold text-black">Ngữ pháp</h3>
             {lessonData.grammar.map((grammar, index) => (
-              <Card key={index} className="p-4">
-                <h4 className="font-medium text-lg mb-2">{grammar.title}</h4>
-                <p className="text-gray-600 mb-3">{grammar.explanation}</p>
+              <Card key={index} className="p-4 border border-black">
+                <h4 className="font-medium text-lg mb-2 text-black bg-yellow-100 px-3 py-1 rounded">{grammar.title}</h4>
+                <p className="text-black mb-3">{grammar.explanation}</p>
                 <div className="space-y-2">
-                  <p className="text-sm font-medium text-gray-700">Ví dụ:</p>
+                  <p className="text-sm font-medium text-black">Ví dụ:</p>
                   {grammar.examples.map((example, idx) => (
-                    <div key={idx} className="bg-gray-50 p-3 rounded">
+                    <div key={idx} className="bg-black text-white p-3 rounded">
                       <p className="text-sm">{example}</p>
                     </div>
                   ))}
@@ -241,18 +250,18 @@ const LessonDetail = () => {
       case 'exercise':
         return (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Bài tập kiểm tra</h3>
+            <h3 className="text-lg font-semibold text-black">Bài tập kiểm tra</h3>
             <div className="space-y-4">
               {lessonData.exercises.map((exercise, index) => (
-                <Card key={exercise.id} className="p-4">
+                <Card key={exercise.id} className="p-4 border border-black">
                   <div className="space-y-3">
-                    <h4 className="font-medium">Câu {index + 1}: {exercise.question}</h4>
+                    <h4 className="font-medium text-black bg-yellow-100 px-3 py-2 rounded">Câu {index + 1}: {exercise.question}</h4>
                     {exercise.type === 'multiple_choice' && (
                       <div className="space-y-2">
                         {exercise.options.map((option, idx) => (
                           <label key={idx} className="flex items-center space-x-2">
-                            <input type="radio" name={`exercise${exercise.id}`} className="text-blue-600" />
-                            <span className="text-sm">{option}</span>
+                            <input type="radio" name={`exercise${exercise.id}`} className="accent-yellow-400" />
+                            <span className="text-sm text-black">{option}</span>
                           </label>
                         ))}
                       </div>
@@ -262,7 +271,7 @@ const LessonDetail = () => {
                         <input 
                           type="text" 
                           placeholder="Nhập đáp án..."
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-2 border border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
                         />
                       </div>
                     )}
@@ -270,34 +279,34 @@ const LessonDetail = () => {
                 </Card>
               ))}
               <div className="flex justify-end">
-                <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+                <button className="bg-yellow-400 text-black px-6 py-2 rounded-lg hover:bg-yellow-500 font-medium border border-black">
                   Nộp bài
                 </button>
               </div>
             </div>
           </div>
-        );
+        ); 
 
       case 'ai-chat':
         return (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Chat với AI</h3>
-            <div className="bg-gray-50 rounded-lg p-4 h-64 overflow-y-auto">
+            <h3 className="text-lg font-semibold text-black">Chat với AI</h3>
+            <div className=" rounded-lg p-4 h-64 overflow-y-auto">
               <div className="space-y-3">
                 <div className="flex items-start space-x-2">
-                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                    <Brain className="w-4 h-4 text-blue-600" />
+                  <div className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center">
+                    <Brain className="w-4 h-4 text-black" />
                   </div>
-                  <div className="bg-white p-3 rounded-lg max-w-xs">
-                    <p className="text-sm">Xin chào! Tôi có thể giúp gì cho bạn về bài học hôm nay?</p>
+                  <div className="bg-white p-3 rounded-lg max-w-xs border border-yellow-400">
+                    <p className="text-sm text-black">Xin chào! Tôi có thể giúp gì cho bạn về bài học hôm nay?</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-2 justify-end">
-                  <div className="bg-blue-600 text-white p-3 rounded-lg max-w-xs">
-                    <p className="text-sm">Tôi muốn luyện phát âm từ "안녕하세요"</p>
+                  <div className="bg-yellow-400 text-black p-3 rounded-lg max-w-xs border border-white">
+                    <p className="text-sm font-medium">Tôi muốn luyện phát âm từ "안녕하세요"</p>
                   </div>
-                  <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                    <User className="w-4 h-4 text-gray-600" />
+                  <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                    <User className="w-4 h-4 text-black" />
                   </div>
                 </div>
               </div>
@@ -306,12 +315,12 @@ const LessonDetail = () => {
               <input 
                 type="text" 
                 placeholder="Nhập tin nhắn..."
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 px-3 py-2 border border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
               />
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+              <button className="bg-yellow-400 text-black px-4 py-2 rounded-lg hover:bg-yellow-500 border border-black">
                 <Mic className="w-4 h-4" />
               </button>
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+              <button className="bg-yellow-400 text-black px-4 py-2 rounded-lg hover:bg-yellow-500 font-medium border border-black">
                 Gửi
               </button>
             </div>
@@ -325,75 +334,70 @@ const LessonDetail = () => {
 
   return (
     <StudentLayout>
-      <div className="flex h-full">
+      <div className="flex h-screen">
         {/* Left Sidebar - Lesson List */}
-        <div className="w-80 bg-white border-r border-gray-200 p-4 overflow-y-auto">
-          <div className="mb-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Danh sách bài học</h3>
-            <div className="flex space-x-1">
-              {['beginner', 'intermediate', 'advanced'].map((level) => (
-                <button
-                  key={level}
-                  onClick={() => setSelectedLevel(level)}
-                  className={`px-3 py-1 text-sm rounded ${
-                    selectedLevel === level 
-                      ? 'bg-blue-600 text-white' 
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  {level === 'beginner' ? 'Sơ cấp' : level === 'intermediate' ? 'Trung cấp' : 'Cao cấp'}
-                </button>
-              ))}
-            </div>
+        <div className="w-80 bg-white border-r-2 border-gray-300 p-6 overflow-y-auto">
+
+
+          <div className="mb-6">
+            <h3 className="text-xl font-bold text-black mb-4">
+              Danh sách bài học
+            </h3>
           </div>
           
-          <div className="space-y-2">
-            {lessonList[selectedLevel].map((lesson) => (
-              <div
+        <div className="space-y-3">
+        {lessonList.map((lesson, index) => {
+            // Kiểm tra nếu bài trước đó đã hoàn thành hoặc là bài đầu tiên
+            const isUnlocked = index === 0 || lessonList[index - 1].completed;
+            if (!isUnlocked) return null; // Không hiển thị nếu chưa mở khóa
+
+            return (
+            <div
                 key={lesson.id}
-                className={`p-3 rounded-lg cursor-pointer transition-colors ${
-                  lesson.current 
-                    ? 'bg-blue-50 border border-blue-200' 
-                    : 'hover:bg-gray-50'
+                className={`p-4 rounded-lg cursor-pointer transition-colors border ${
+                lesson.current 
+                    ? 'bg-yellow-100 border-yellow-400' 
+                    : 'bg-white border-gray-300 hover:bg-yellow-50'
                 }`}
-              >
+            >
                 <div className="flex items-center justify-between">
-                  <div>
+                <div>
                     <p className={`text-sm font-medium ${
-                      lesson.current ? 'text-blue-900' : 'text-gray-900'
+                    lesson.current ? 'text-black' : 'text-gray-700'
                     }`}>
-                      {lesson.title}
+                    {lesson.title}
                     </p>
-                    <p className="text-xs text-gray-500">45 phút</p>
-                  </div>
-                  {lesson.completed && (
-                    <CheckCircle className="w-4 h-4 text-green-600" />
-                  )}
+                    <p className="text-xs text-gray-500 mt-1">45 phút</p>
                 </div>
-              </div>
-            ))}
-          </div>
+                {lesson.completed && (
+                    <CheckCircle className="w-5 h-5 text-yellow-400" />
+                )}
+                </div>
+            </div>
+            );
+        })}
+        </div>
         </div>
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col">
           {/* Top Navigation */}
-          <div className="bg-white border-b border-gray-200 p-4">
+          <div className="bg-black border-b-4 border-yellow-400 p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <button className="text-gray-600 hover:text-gray-900">
+                <button className="text-white hover:text-yellow-400">
                   <ArrowLeft className="w-5 h-5" />
                 </button>
                 <div>
-                  <h2 className="text-xl font-bold text-gray-900">{lessonData.title}</h2>
-                  <p className="text-sm text-gray-500">{lessonData.level} • {lessonData.duration}</p>
+                  <h2 className="text-xl font-bold text-white">{lessonData.title}</h2>
+                  <p className="text-sm text-yellow-400">{lessonData.level} • {lessonData.duration}</p>
                 </div>
               </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-32 bg-gray-200 rounded-full h-2">
-                  <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${lessonData.progress}%` }}></div>
+              <div className="flex items-center space-x-3">
+                <div className="w-32 bg-gray-700 rounded-full h-3">
+                  <div className="bg-yellow-400 h-3 rounded-full" style={{ width: `${lessonData.progress}%` }}></div>
                 </div>
-                <span className="text-sm text-gray-600">{lessonData.progress}%</span>
+                <span className="text-sm text-white font-medium">{lessonData.progress}%</span>
               </div>
             </div>
           </div>
@@ -401,19 +405,19 @@ const LessonDetail = () => {
           {/* Content Area */}
           <div className="flex-1 flex">
             {/* Center Content */}
-            <div className="flex-1 p-6 overflow-y-auto">
+            <div className="flex-1 p-6 overflow-y-auto bg-white">
               {/* Tabs */}
-              <div className="flex space-x-1 mb-6 border-b border-gray-200">
+              <div className="flex flex-wrap gap-2 mb-6 pb-4 border-b-2 border-black">
                 {tabs.map((tab) => {
                   const Icon = tab.icon;
                   return (
                     <button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
-                      className={`flex items-center space-x-2 px-4 py-2 text-sm font-medium rounded-t-lg transition-colors ${
+                      className={`flex items-center space-x-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors border border-black ${
                         activeTab === tab.id
-                          ? 'bg-blue-50 text-blue-700 border-b-2 border-blue-700'
-                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                          ? 'bg-yellow-400 text-black'
+                          : 'bg-white text-black hover:bg-yellow-100'
                       }`}
                     >
                       <Icon className="w-4 h-4" />
@@ -430,73 +434,60 @@ const LessonDetail = () => {
             </div>
 
             {/* Right Sidebar */}
-            <div className="w-80 bg-gray-50 p-4 overflow-y-auto">
+            <div className="w-80 bg-yellow-50 p-4 overflow-y-auto border-l-2 border-gray-300">
               <div className="space-y-4">
                 {/* Dictionary */}
-                <Card className="p-4">
+                <Card className="p-4 border border-black">
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="font-medium text-gray-900">Từ điển nhanh</h3>
+                    <h3 className="font-medium text-black">Từ điển nhanh</h3>
                     <button 
                       onClick={() => setShowDictionaryModal(true)}
-                      className="text-blue-600 hover:text-blue-800 text-sm"
+                      className="bg-yellow-400 text-black px-3 py-1 rounded hover:bg-yellow-500 text-sm font-medium border border-black"
                     >
                       Mở rộng
                     </button>
                   </div>
                   <div className="space-y-2">
-                    <div className="flex items-center space-x-2 p-2 bg-white rounded border">
-                      <Search className="w-4 h-4 text-gray-400" />
+                    <div className="flex items-center space-x-2 p-2 bg-white rounded border border-black">
+                      <Search className="w-4 h-4 text-black" />
                       <input 
                         type="text" 
                         placeholder="Tra từ..."
-                        className="flex-1 text-sm border-none outline-none"
+                        className="flex-1 text-sm border-none outline-none text-black"
                       />
                     </div>
                   </div>
                 </Card>
 
-                {/* Related Suggestions */}
-                <Card className="p-4">
-                  <h3 className="font-medium text-gray-900 mb-3">Gợi ý liên quan</h3>
-                  <div className="space-y-2">
-                    {relatedSuggestions.map((suggestion) => (
-                      <div key={suggestion.id} className="p-2 bg-white rounded border cursor-pointer hover:bg-gray-50">
-                        <p className="text-sm font-medium text-gray-900">{suggestion.title}</p>
-                        <p className="text-xs text-gray-500">{suggestion.level}</p>
-                      </div>
-                    ))}
-                  </div>
-                </Card>
-
                 {/* Progress */}
-                <Card className="p-4">
-                  <h3 className="font-medium text-gray-900 mb-3">Tiến độ bài học</h3>
-                  <div className="space-y-3">
+                <Card className="p-4 border border-black">
+                  <h3 className="font-medium text-black mb-3">Tiến độ bài học</h3>
+                  <div className="space-y-4">
                     <div>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span>Video</span>
-                        <span>60%</span>
+                      <div className="flex justify-between text-sm mb-2 font-medium">
+                        <span className="text-black">Video</span>
+                        <span className="text-black">60%</span>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div className="bg-blue-600 h-2 rounded-full" style={{ width: '60%' }}></div>
+                      <div className="w-full bg-gray-300 rounded-full h-3 border border-black">
+                        <div className="bg-yellow-400 h-3 rounded-full" style={{ width: '60%' }}></div>
                       </div>
                     </div>
                     <div>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span>Từ vựng</span>
-                        <span>40%</span>
+                      <div className="flex justify-between text-sm mb-2 font-medium">
+                        <span className="text-black">Từ vựng</span>
+                        <span className="text-black">40%</span>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div className="bg-green-600 h-2 rounded-full" style={{ width: '40%' }}></div>
+                      <div className="w-full bg-gray-300 rounded-full h-3 border border-black">
+                        <div className="bg-black h-3 rounded-full" style={{ width: '40%' }}></div>
                       </div>
                     </div>
                     <div>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span>Bài tập</span>
-                        <span>0%</span>
+                      <div className="flex justify-between text-sm mb-2 font-medium">
+                        <span className="text-black">Bài tập</span>
+                        <span className="text-black">0%</span>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div className="bg-yellow-600 h-2 rounded-full" style={{ width: '0%' }}></div>
+                      <div className="w-full bg-gray-300 rounded-full h-3 border border-black">
+                        <div className="bg-yellow-400 h-3 rounded-full" style={{ width: '0%' }}></div>
                       </div>
                     </div>
                   </div>
@@ -510,4 +501,4 @@ const LessonDetail = () => {
   );
 };
 
-export default LessonDetail; 
+export default LessonDetail;

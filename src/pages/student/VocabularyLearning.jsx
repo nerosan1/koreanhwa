@@ -96,7 +96,9 @@ const TopikVocabularyLearning = () => {
           </div>
 
           {/* Test Button */}
-          <button className="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-full font-medium shadow-md transition-all duration-200 transform hover:scale-105">
+          <button
+            onClick={() => navigate('/student/topik/vocabulary-test')}
+           className="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-full font-medium shadow-md transition-all duration-200 transform hover:scale-105">
             Kiểm tra
           </button>
         </div>
@@ -115,8 +117,10 @@ const TopikVocabularyLearning = () => {
 
         {/* Floating Action Button */}
         <div className="fixed bottom-8 right-8">
-          <button className="w-14 h-14 bg-yellow-400 hover:bg-yellow-500 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 transform hover:scale-110">
-            <RotateCcw className="w-6 h-6 text-white" />
+          <button 
+            onClick={() => navigate('/student/topik/vocabulary-flashcard')}
+          className="text-black font-bold p-5 bg-yellow-400 hover:bg-yellow-500 rounded-full shadow-lg flex items-center justify-center transition-all duration-200 transform hover:scale-110">
+            Flashcard
           </button>
         </div>
       </div>

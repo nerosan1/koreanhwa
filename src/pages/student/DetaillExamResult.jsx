@@ -354,7 +354,9 @@ export default function KoreanTestDashboard() {
                 Xem chi tiết đáp án
               </button>
               <button
-                onClick={() => navigate('/student/topik/TestForm')}
+                onClick={() => navigate('/student/topik/TestForm', {
+                  state: { testType: 'topik' }
+                })}
                className="border border-gray-300 px-4 py-2 rounded text-gray-700 hover:bg-gray-50">
                 Làm lại các câu sai
               </button>

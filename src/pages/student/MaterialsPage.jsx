@@ -20,9 +20,11 @@ import {
   CheckCircle
 } from 'lucide-react';
 import Card from '../../components/common/Card';
+import { useNavigate } from 'react-router-dom';
 import StudentLayout from '../../components/layout/StudentLayout';
 
 const MaterialsPage = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLevel, setSelectedLevel] = useState('all');
   const [selectedSkill, setSelectedSkill] = useState('all');
@@ -166,9 +168,7 @@ const MaterialsPage = () => {
 
   const handleDownload = (material) => {
     if (userPoints >= material.points) {
-      setUserPoints(prev => prev - material.points);
-      // Simulate download
-      console.log(`Downloading: ${material.title}`);
+      navigate(`/student/materials/detail`);
     } else {
       alert('Bạn không đủ điểm để tải tài liệu này!');
     }
@@ -255,7 +255,7 @@ const MaterialsPage = () => {
                   disabled={userPoints < material.points}
                   className={`px-4 py-2 rounded-lg flex items-center space-x-2 ${
                     userPoints >= material.points
-                      ? 'bg-blue-600 text-white hover:bg-blue-700'
+                      ? 'bg-black text-white hover:bg-yellow-500'
                       : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                   }`}
                 >
@@ -354,7 +354,7 @@ const MaterialsPage = () => {
 
         {/* Filters */}
         <Card className="p-4">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-10">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Tìm kiếm</label>
               <div className="relative">
@@ -364,7 +364,7 @@ const MaterialsPage = () => {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Tìm tài liệu..."
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full pl-10 pr-3 py-2 border border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
@@ -373,7 +373,7 @@ const MaterialsPage = () => {
               <select
                 value={selectedLevel}
                 onChange={(e) => setSelectedLevel(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 {levels.map(level => (
                   <option key={level.id} value={level.id}>{level.name}</option>
@@ -385,7 +385,7 @@ const MaterialsPage = () => {
               <select
                 value={selectedSkill}
                 onChange={(e) => setSelectedSkill(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 {skills.map(skill => (
                   <option key={skill.id} value={skill.id}>{skill.name}</option>
@@ -397,7 +397,7 @@ const MaterialsPage = () => {
               <select
                 value={selectedType}
                 onChange={(e) => setSelectedType(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 {types.map(type => (
                   <option key={type.id} value={type.id}>{type.name}</option>

@@ -138,7 +138,10 @@ const ListenAndWriteQuiz = () => {
               disabled={isPlaying}
               className="relative mx-auto w-24 h-24 bg-yellow-500 rounded-full flex items-center justify-center hover:bg-yellow-600 transition-colors disabled:opacity-70"
             >
-              <div className="text-white text-2xl">😊</div>
+              <div className="text-white text-2xl">
+                <img src="/src/assets/avatar.jpg"  className="w-20 h-20 rounded-full" />
+              </div>
+
               {isPlaying && (
                 <div className="absolute inset-0 bg-yellow-400 rounded-full animate-ping opacity-75"></div>
               )}

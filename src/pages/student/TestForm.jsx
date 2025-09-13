@@ -1,9 +1,30 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Info, MessageCircle, Clock } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const KoreanTestForm = () => {
     const navigate = useNavigate();
+
+    const location = useLocation();
+
+      // Lưu testType vào state để giữ lại sau khi reload
+      const [testType, setTestType] = useState('topik');
+
+      useEffect(() => {
+        if (location.state?.testType) {
+          setTestType(location.state.testType);
+        }
+      }, [location.state]);
+
+      const handleSubmit = () => {
+        if (testType === 'roadmap') {
+          navigate('/student/roadmap/detail');
+        } else {
+          navigate('/student/topik/DetaillExamResult');
+        }
+      };
+
+
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [highlightEnabled, setHighlightEnabled] = useState(true);
   const [timeLeft, setTimeLeft] = useState(14 * 60); // 14 minutes in seconds
@@ -268,7 +289,7 @@ const KoreanTestForm = () => {
           <div className="bg-white rounded-xl shadow-lg border-2 border-yellow-200 p-6 sticky top-8">
             <div className="text-right mb-4">
               <button 
-              onClick={() => navigate('/student/topik/DetaillExamResult')}
+              onClick={handleSubmit}
               className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg text-black font-semibold hover:bg-gray-50 transition-colors">
                 NỘP BÀI
               </button>

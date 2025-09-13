@@ -23,9 +23,11 @@ import {
   AlignRight
 } from 'lucide-react';
 import Card from '../../components/common/Card';
-import StudentLayout from '../../components/layout/StudentLayout';
+import {useNavigate} from 'react-router-dom';
+
 
 const CreateBlog = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: '',
     blocks: [{ type: 'text', content: '', style: {} }],
@@ -145,8 +147,7 @@ const CreateBlog = () => {
   };
 
   return (
-    <StudentLayout>
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-8 relative">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-8 relative ">
         <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-pink-400/20 to-orange-400/20 rounded-full blur-2xl animate-bounce"></div>
 
@@ -154,11 +155,11 @@ const CreateBlog = () => {
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center space-x-4">
-              <button className="p-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 hover:scale-110">
+              <button onClick={() => navigate(-1)} className="p-2 rounded-full bg-black text-white hover:bg-yellow-500 transition-all duration-300 hover:scale-110">
                 <ArrowLeft className="w-6 h-6" />
               </button>
               <div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                <h1 className="text-3xl font-bold  bg-clip-text ">
                   Tạo Bài Blog Mới
                 </h1>
                 <p className="text-sm text-gray-600 mt-2">Chia sẻ kiến thức và kinh nghiệm học tiếng Hàn của bạn</p>
@@ -166,7 +167,7 @@ const CreateBlog = () => {
             </div>
             <button 
               onClick={() => setIsPreviewVisible(!isPreviewVisible)}
-              className="p-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 transition-all duration-300 hover:scale-110"
+              className="p-3 rounded-full text-black bg-yellow-500 hover:from-purple-600 hover:to-pink-600 transition-all duration-300 hover:scale-110"
             >
               {isPreviewVisible ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
@@ -252,10 +253,10 @@ const CreateBlog = () => {
                           <button onClick={() => removeBlock(index)} className="absolute top-2 right-2 text-gray-400 hover:text-red-500"><XCircle className="w-5 h-5" /></button>
                         </div>
                       ))}
-                      <button onClick={() => addBlock('text')} className="w-full p-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2">
+                      <button onClick={() => addBlock('text')} className="w-full p-3 bg-black text-white rounded-xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2">
                         <Plus className="w-5 h-5" /> Thêm khối văn bản
                       </button>
-                      <button onClick={() => addBlock('image')} className="w-full p-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2">
+                      <button onClick={() => addBlock('image')} className="w-full p-3 bg-yellow-500 text-black rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2">
                         <Image className="w-5 h-5" /> Thêm hình ảnh
                       </button>
                     </div>
@@ -329,7 +330,7 @@ const CreateBlog = () => {
                   <div className="flex justify-end space-x-4">
                     <button
                       type="button"
-                      className="px-6 py-3 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-xl hover:from-gray-600 hover:to-gray-700 transition-all duration-300 hover:scale-105 shadow-lg flex items-center gap-2"
+                      className="px-6 py-3 bg-black text-white rounded-xl hover:from-gray-600 hover:to-gray-700 transition-all duration-300 hover:scale-105 shadow-lg flex items-center gap-2"
                     >
                       <XCircle className="w-5 h-5" />
                       Hủy
@@ -337,7 +338,7 @@ const CreateBlog = () => {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className={`px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 hover:scale-105 shadow-lg flex items-center gap-2 ${
+                      className={`px-6 py-3 bg-yellow-500 text-black rounded-xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 hover:scale-105 shadow-lg flex items-center gap-2 ${
                         isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
                       }`}
                     >
@@ -351,8 +352,8 @@ const CreateBlog = () => {
 
             {/* Preview Section */}
             <div className="lg:col-span-1">
-              <Card className="p-6 bg-gradient-to-br from-purple-100 to-pink-100 rounded-3xl shadow-2xl">
-                <h3 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
+              <Card className="p-6 bg-white  rounded-3xl shadow-2xl">
+                <h3 className="text-xl font-bold  bg-clip-text  mb-4">
                   Xem trước
                 </h3>
                 {isPreviewVisible && (
@@ -383,7 +384,7 @@ const CreateBlog = () => {
                       {formData.tags.map((tag, index) => (
                         <span
                           key={index}
-                          className="px-3 py-1 bg-gradient-to-r from-purple-400 to-pink-400 text-white rounded-full text-xs"
+                          className="px-3 py-1 bg-black text-white rounded-full text-xs"
                         >
                           {tag}
                         </span>
@@ -408,29 +409,8 @@ const CreateBlog = () => {
             </div>
           </div>
 
-          {/* Motivation Section */}
-          <div className="mt-8 relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 p-8 text-white shadow-2xl">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-pulse"></div>
-            <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl animate-bounce"></div>
-            <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
-            
-            <div className="relative z-10 text-center">
-              <Sparkles className="w-16 h-16 mx-auto mb-6 animate-pulse" />
-              <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-white to-purple-100 bg-clip-text text-transparent">
-                Chia sẻ câu chuyện của bạn!
-              </h3>
-              <p className="text-purple-100 mb-8 text-lg max-w-2xl mx-auto">
-                Viết một bài blog để chia sẻ kinh nghiệm học tiếng Hàn của bạn và truyền cảm hứng cho cộng đồng.
-              </p>
-              <button className="px-8 py-4 bg-white/20 rounded-2xl hover:bg-white/30 transition-all duration-300 hover:scale-110 backdrop-blur-sm flex items-center gap-3 mx-auto shadow-lg">
-                <Edit className="w-5 h-5" />
-                Bắt đầu viết ngay
-              </button>
-            </div>
-          </div>
         </div>
       </div>
-    </StudentLayout>
   );
 };
 

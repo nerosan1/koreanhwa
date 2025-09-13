@@ -151,7 +151,9 @@ const navigate = useNavigate();
 
                   {/* Start Button */}
                   <button type="button"
-                    onClick={navigate('/student/topik/TestForm')}
+                    onClick={() => navigate('/student/topik/TestForm', {
+                      state: { testType: 'topik' }
+                    })}
                     className="w-full sm:w-auto px-6 py-3 bg-yellow-600 text-white font-medium rounded-lg hover:bg-yellow-700 transition-colors"
                   >
                     LUYỆN TẬP

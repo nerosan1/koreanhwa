@@ -12,7 +12,7 @@ const Card = ({
   const baseClasses = 'rounded-xl shadow-sm border transition-all duration-200';
   
   const variants = {
-    default: 'bg-white border-gray-200 hover:shadow-md',
+    default: 'bg-white border-black hover:shadow-md',
     elevated: 'bg-white border-gray-200 shadow-lg hover:shadow-xl',
     outlined: 'bg-transparent border-2 border-gray-300 hover:border-gray-400',
     filled: 'bg-gray-50 border-gray-200 hover:bg-gray-100',
