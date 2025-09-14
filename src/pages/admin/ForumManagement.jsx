@@ -29,10 +29,10 @@ import {
   Legend, 
   ResponsiveContainer 
 } from 'recharts';
-import Button from '../components/common/Button';
-import Card from '../components/common/Card';
-import Input from '../components/common/Input';
-import AdminLayout from '../components/layout/AdminLayout';
+import AdminLayout from '../../components/layout/AdminLayout';
+import Card from '../../components/common/Card';
+import Input from '../../components/common/Input';
+import Button from '../../components/common/Button';
 
 const ForumManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');

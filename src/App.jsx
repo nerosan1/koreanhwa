@@ -1,26 +1,26 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Layout from './components/layout/Layout';
 import Home from './pages/Home';
-import DashboardPage from './pages/Dashboard';
-import Components from './pages/Components';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Admin from './pages/Admin';
-import UserManagement from './pages/UserManagement';
-import ContentManagement from './pages/ContentManagement';
-import RoleManagement from './pages/RoleManagement';
-import ForumManagement from './pages/ForumManagement';
-import DictionaryManagement from './pages/DictionaryManagement';
-import ProgressManagement from './pages/ProgressManagement';
-import ReportsManagement from './pages/ReportsManagement';
-import SettingsManagement from './pages/SettingsManagement';
-import MaterialsManagement from './pages/MaterialsManagement';
-import ExamManagement from './pages/ExamManagement';
-import AISystemMonitoring from './pages/AISystemMonitoring';
-import AddUser from './pages/AddUser';
-import CreateContent from './pages/CreateContent';
-import AddRole from './pages/AddRole';
+import Admin from './pages/admin/Admin.jsx';
+import UserManagement from './pages/admin/UserManagement.jsx';
+import ContentManagement from './pages/admin/ContentManagement';
+import RoleManagement from './pages/admin/RoleManagement';
+import ForumManagement from './pages/admin/ForumManagement';
+import DictionaryManagement from './pages/admin/DictionaryManagement';
+import ProgressManagement from './pages/admin/ProgressManagement';
+import ReportsManagement from './pages/admin/ReportsManagement';
+import SettingsManagement from './pages/admin/SettingsManagement.jsx';
+import MaterialsManagement from './pages/admin/MaterialsManagement';
+import ExamManagement from './pages/admin/ExamManagement';
+import AISystemMonitoring from './pages/admin/AISystemMonitoring';
+import AddUser from './pages/admin/UserAdd.jsx';
+import CreateContent from './pages/admin/CreateContent.jsx';
+import AddRole from './pages/admin/AddRole.jsx';
+import UserInfo from './pages/admin/UserInfo.jsx';
+import UserEdit from './pages/admin/UserUpdate.jsx';
+
 import StudentDashboard from './pages/student/StudentDashboard';
 import LessonDashboard from './pages/student/LessonDashboard.jsx';
 import TOPIKPractice from './pages/student/TOPIKPractice';
@@ -56,7 +56,7 @@ import CompetitionPage from './pages/student/CompetitionPage2';
 import CompetitionJoin from './pages/student/CompetitionJoin';
 import CompetitionInfo from './pages/student/CompetitionInfo';
 import SettingsPage from './pages/student/SettingsPage';
-import Test from './pages/Test';
+
 // import './App.css';
 
 function App() {
@@ -64,14 +64,15 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/test" element={<Test />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         
         {/* Admin Routes */}
         <Route path="/admin" element={<Admin />} />
         <Route path="/admin/users" element={<UserManagement />} />
+        <Route path="/admin/users/info" element={<UserInfo />} />
         <Route path="/admin/users/add" element={<AddUser />} />
+        <Route path="/admin/users/update" element={<UserEdit />} />
         <Route path="/admin/content" element={<ContentManagement />} />
         <Route path="/admin/content/create" element={<CreateContent />} />
         <Route path="/admin/roles" element={<RoleManagement />} />
@@ -122,13 +123,6 @@ function App() {
         <Route path="/student/competition/join" element={<CompetitionJoin />} />
         <Route path="/student/competition/info" element={<CompetitionInfo />} />
         <Route path="/student/settings" element={<SettingsPage />} />        
-        {/* Legacy Routes */}
-        {/* <Route path="/dashboard" element={<Layout><DashboardPage /></Layout>} />
-        <Route path="/components" element={<Layout><Components /></Layout>} />
-        <Route path="/courses" element={<Layout><div className="text-center py-16"><h1 className="text-3xl font-bold">Courses</h1><p className="text-gray-600 mt-4">Courses page is under development...</p></div></Layout>} />
-        <Route path="/lessons" element={<Layout><div className="text-center py-16"><h1 className="text-3xl font-bold">Lessons</h1><p className="text-gray-600 mt-4">Lessons page is under development...</p></div></Layout>} />
-        <Route path="/achievements" element={<Layout><div className="text-center py-16"><h1 className="text-3xl font-bold">Achievements</h1><p className="text-gray-600 mt-4">Achievements page is under development...</p></div></Layout>} />
-        <Route path="/profile" element={<Layout><div className="text-center py-16"><h1 className="text-3xl font-bold">Profile</h1><p className="text-gray-600 mt-4">Profile page is under development...</p></div></Layout>} /> */}
       </Routes>
     </Router>
   );

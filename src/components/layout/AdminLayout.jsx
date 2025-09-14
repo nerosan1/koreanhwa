@@ -16,12 +16,26 @@ import {
   X,
   FolderOpen,
   Calendar,
-  Brain
+  Brain,
+  Bell
 } from 'lucide-react';
+import NotificationBell from '../admin/NotificationBell';
 
 const AdminLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
+
+  // Mock data cho notifications - trong thực tế sẽ lấy từ API hoặc state management
+  const [notifications] = useState({
+    '/admin/users': { count: 3, type: 'new' }, // Người dùng mới đăng ký
+    '/admin/content': { count: 5, type: 'pending' }, // Nội dung chờ duyệt
+    '/admin/forum': { count: 12, type: 'violation' }, // Bài viết vi phạm
+    '/admin/dictionary': { count: 8, type: 'pending' }, // Từ mới chờ duyệt
+    '/admin/materials': { count: 2, type: 'new' }, // Tài liệu mới upload
+    '/admin/exams': { count: 1, type: 'urgent' }, // Kỳ thi sắp diễn ra
+    '/admin/ai-monitoring': { count: 1, type: 'warning' }, // Cảnh báo hệ thống
+    '/admin/reports': { count: 7, type: 'new' }, // Báo cáo mới
+  });
 
   const navigation = [
     {
@@ -112,6 +126,54 @@ const AdminLayout = ({ children }) => {
     return location.pathname === href;
   };
 
+  // Hàm để lấy màu sắc dựa trên loại thông báo
+  const getNotificationStyle = (type) => {
+    switch (type) {
+      case 'urgent':
+        return 'bg-red-500 animate-pulse';
+      case 'warning':
+        return 'bg-orange-500';
+      case 'violation':
+        return 'bg-red-600';
+      case 'pending':
+        return 'bg-yellow-500';
+      case 'new':
+        return 'bg-blue-500';
+      default:
+        return 'bg-gray-500';
+    }
+  };
+
+  // Component hiển thị notification badge
+  const NotificationBadge = ({ notification }) => {
+    if (!notification) return null;
+    
+    const { count, type } = notification;
+    
+    return (
+      <div className="relative">
+        {count > 0 && (
+          <div className={`absolute -top-1 -right-1 min-w-[18px] h-4 ${getNotificationStyle(type)} rounded-full flex items-center justify-center`}>
+            <span className="text-white text-xs font-medium px-1">
+              {count > 99 ? '99+' : count}
+            </span>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  // Component hiển thị notification dot
+  const NotificationDot = ({ notification }) => {
+    if (!notification) return null;
+    
+    const { type } = notification;
+    
+    return (
+      <div className={`w-2 h-2 ${getNotificationStyle(type)} rounded-full`}></div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Mobile sidebar overlay */}
@@ -143,22 +205,31 @@ const AdminLayout = ({ children }) => {
                 <div className="space-y-2">
                   {section.items.map((item) => {
                     const Icon = item.icon;
+                    const notification = notifications[item.href];
+                    
                     return (
                       <Link
                         key={item.name}
                         to={item.href}
-                        className={`group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
+                        className={`group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 relative ${
                           isActive(item.href)
                             ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
                             : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
                         }`}
                         onClick={() => setSidebarOpen(false)}
                       >
-                        <Icon className={`mr-3 h-5 w-5 ${
-                          isActive(item.href) ? 'text-blue-700' : 'text-gray-400 group-hover:text-gray-500'
-                        }`} />
+                        <div className="relative mr-3">
+                          <Icon className={`h-5 w-5 ${
+                            isActive(item.href) ? 'text-blue-700' : 'text-gray-400 group-hover:text-gray-500'
+                          }`} />
+                          <NotificationBadge notification={notification} />
+                        </div>
+                        
                         <div className="flex-1">
-                          <div className="font-medium">{item.name}</div>
+                          <div className="font-medium flex items-center justify-between">
+                            <span>{item.name}</span>
+                            <NotificationDot notification={notification} />
+                          </div>
                           <div className="text-xs text-gray-500 mt-1">{item.description}</div>
                         </div>
                       </Link>
@@ -216,6 +287,8 @@ const AdminLayout = ({ children }) => {
               <Menu className="w-5 h-5" />
             </button>
             <div className="flex items-center space-x-4">
+              {/* Notification bell in top bar */}
+              <NotificationBell />
               <div className="text-sm text-gray-500">
                 {new Date().toLocaleDateString('vi-VN', {
                   weekday: 'long',
@@ -237,4 +310,4 @@ const AdminLayout = ({ children }) => {
   );
 };
 
-export default AdminLayout; 
+export default AdminLayout;
