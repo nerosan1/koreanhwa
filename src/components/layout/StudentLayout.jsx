@@ -48,7 +48,6 @@ const StudentLayout = ({ children }) => {
     {
       name: 'Cá nhân',
       items: [
-        { name: 'Hồ sơ', href: '/student/profile', icon: User },
         { name: 'Cài đặt', href: '/student/settings', icon: Settings }
       ]
     }

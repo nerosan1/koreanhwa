@@ -53,6 +53,8 @@ import LessonClassroom from './pages/student/LessonClassrom.jsx';
 import MyRoadmap from './pages/student/MyRoadmap';
 import MyRoadmapDetail from './pages/student/MyRoadmapDetail';
 import CompetitionPage from './pages/student/CompetitionPage2';
+import CompetitionJoin from './pages/student/CompetitionJoin';
+import CompetitionInfo from './pages/student/CompetitionInfo';
 import SettingsPage from './pages/student/SettingsPage';
 import Test from './pages/Test';
 // import './App.css';
@@ -117,9 +119,9 @@ function App() {
         <Route path="/student/blog/manage" element={<ManageBlog />} />
         <Route path="/student/blog/detail" element={<BlogDetail />} />
         <Route path="/student/competition" element={<CompetitionPage />} />
-        <Route path="/student/settings" element={<SettingsPage />} />
-        <Route path="/student/profile" element={<div className="text-center py-16"><h1 className="text-3xl font-bold">Hồ sơ cá nhân</h1><p className="text-gray-600 mt-4">Trang hồ sơ cá nhân đang được phát triển...</p></div>} />
-        
+        <Route path="/student/competition/join" element={<CompetitionJoin />} />
+        <Route path="/student/competition/info" element={<CompetitionInfo />} />
+        <Route path="/student/settings" element={<SettingsPage />} />        
         {/* Legacy Routes */}
         {/* <Route path="/dashboard" element={<Layout><DashboardPage /></Layout>} />
         <Route path="/components" element={<Layout><Components /></Layout>} />
