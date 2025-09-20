@@ -35,8 +35,10 @@ import AdminLayout from '../../components/layout/AdminLayout';
 import Card from '../../components/common/Card';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
+import { useNavigate } from 'react-router-dom';
 
 const MaterialsManagement = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
   const [filterLevel, setFilterLevel] = useState('all');
@@ -251,19 +253,7 @@ const MaterialsManagement = () => {
   };
 
   const handleEditMaterial = (material) => {
-    setEditingMaterial(material);
-    setNewMaterial({
-      title: material.title,
-      description: material.description,
-      type: material.type,
-      level: material.level,
-      category: material.category,
-      fileUrl: material.fileUrl,
-      fileSize: material.fileSize,
-      downloads: material.downloads,
-      status: material.status
-    });
-    setShowAddModal(true);
+    navigate(`/admin/materials/update/${material.id}`);
   };
 
   const handleUpdateMaterial = () => {
@@ -310,7 +300,7 @@ const MaterialsManagement = () => {
               <Upload className="w-4 h-4 mr-2" />
               Import
             </Button>
-            <Button variant="primary" onClick={() => setShowAddModal(true)}>
+            <Button variant="primary" onClick={() => navigate('/admin/materials/add')}>
               <Plus className="w-4 h-4 mr-2" />
               Thêm tài liệu
             </Button>

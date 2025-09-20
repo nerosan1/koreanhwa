@@ -44,46 +44,72 @@ import {
 import Card from '../../components/common/Card';
 import StudentLayout from '../../components/layout/StudentLayout';
 import PointInfor from '../../components/student/PointInfor';
+import { POINT_SYSTEM, getStudentLevel, getProgressToNextLevel } from '../../utils/pointSystem';
 
 const StudentDashboard = () => {
   const [showStreakDetails, setShowStreakDetails] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState('week');
   
+// Mock user data với hệ thống điểm số
+const currentUser = {
+  name: 'Nguyễn Văn A',
+  points: 450,
+  level: getStudentLevel(450),
+  streak: 12,
+  totalStudyDays: 89,
+  avatar: 'A'
+};
+
 const courses = [
   {
     color: 'blue',
     date: '2025-09-01',
-    title: 'React Fundamentals',
-    description: 'Master the basics of building dynamic web apps with React.',
+    title: 'Bài 1: Chào hỏi cơ bản',
+    description: 'Học cách chào hỏi cơ bản trong tiếng Hàn',
     progress: 75,
+    price: 15,
+    originalPrice: 20,
+    isFree: false,
+    pointsRequired: 15,
+    level: 'beginner',
     lessons: [
-      { title: 'Introduction to React', progress: 100, completedDate: '2025-09-02' },
-      { title: 'Components & Props', progress: 50, completedDate: null },
-      { title: 'State & Lifecycle', progress: 75, completedDate: null },
+      { title: 'Học bảng chữ cái', progress: 100, completedDate: '2025-09-02', pointsEarned: 10 },
+      { title: 'Từ vựng chào hỏi', progress: 50, completedDate: null, pointsEarned: 0 },
+      { title: 'Ngữ pháp cơ bản', progress: 75, completedDate: null, pointsEarned: 0 },
     ],
   },
   {
     color: 'green',
     date: '2025-08-15',
-    title: 'JavaScript Advanced',
-    description: 'Deep dive into modern JavaScript concepts and patterns.',
+    title: 'Bài 2: Giới thiệu bản thân',
+    description: 'Học cách giới thiệu bản thân và người khác',
     progress: 90,
+    price: 20,
+    originalPrice: 25,
+    isFree: false,
+    pointsRequired: 20,
+    level: 'beginner',
     lessons: [
-      { title: 'Closures & Scope', progress: 100, completedDate: '2025-08-16' },
-      { title: 'Async/Await', progress: 100, completedDate: '2025-08-20' },
-      { title: 'ES Modules', progress: 70, completedDate: null },
+      { title: 'Từ vựng gia đình', progress: 100, completedDate: '2025-08-16', pointsEarned: 15 },
+      { title: 'Ngữ pháp giới thiệu', progress: 100, completedDate: '2025-08-20', pointsEarned: 20 },
+      { title: 'Luyện tập hội thoại', progress: 70, completedDate: null, pointsEarned: 0 },
     ],
   },
   {
     color: 'purple',
     date: '2025-07-10',
-    title: 'CSS Mastery',
-    description: 'Learn advanced CSS techniques for responsive designs.',
+    title: 'Bài 3: Số đếm và thời gian',
+    description: 'Học cách đếm số và nói về thời gian',
     progress: 60,
+    price: 0,
+    originalPrice: 0,
+    isFree: true,
+    pointsRequired: 0,
+    level: 'intermediate',
     lessons: [
-      { title: 'Flexbox Basics', progress: 100, completedDate: '2025-07-12' },
-      { title: 'Grid Layout', progress: 50, completedDate: null },
-      { title: 'Animations', progress: 30, completedDate: null },
+      { title: 'Số đếm Hàn Quốc', progress: 100, completedDate: '2025-07-12', pointsEarned: 12 },
+      { title: 'Cách nói thời gian', progress: 50, completedDate: null, pointsEarned: 0 },
+      { title: 'Bài tập thực hành', progress: 30, completedDate: null, pointsEarned: 0 },
     ],
   },
 ];
@@ -116,13 +142,68 @@ const courses = [
         [index]: !prev[index],
       }));
     };
-  // Dữ liệu Leaderboard
+  // Dữ liệu Leaderboard với hệ thống điểm số
   const leaderboard = [
-    { rank: 1, name: 'Trần Thị B', level: 'Trung cấp 1', points: 2840, avatar: 'B', streak: 15, wins: 8, color: 'from-yellow-400 to-yellow-600' },
-    { rank: 2, name: 'Lê Văn C', level: 'Sơ cấp 3', points: 2650, avatar: 'C', streak: 12, wins: 6, color: 'from-gray-400 to-gray-600' },
-    { rank: 3, name: 'Phạm Thị D', level: 'Sơ cấp 2', points: 2480, avatar: 'D', streak: 8, wins: 5, color: 'from-orange-400 to-orange-600' },
-    { rank: 4, name: 'Hoàng Văn E', level: 'Sơ cấp 2', points: 2320, avatar: 'E', streak: 5, wins: 4, color: 'from-blue-400 to-blue-600' },
-    { rank: 5, name: 'Nguyễn Văn A', level: 'Sơ cấp 2', points: 2180, avatar: 'A', streak: 12, wins: 3, color: 'from-green-400 to-green-600' }
+    { 
+      rank: 1, 
+      name: 'Trần Thị B', 
+      level: getStudentLevel(2840), 
+      points: 2840, 
+      avatar: 'B', 
+      streak: 15, 
+      wins: 8, 
+      color: 'from-yellow-400 to-yellow-600',
+      weeklyPoints: 150,
+      monthlyPoints: 600
+    },
+    { 
+      rank: 2, 
+      name: 'Lê Văn C', 
+      level: getStudentLevel(2650), 
+      points: 2650, 
+      avatar: 'C', 
+      streak: 12, 
+      wins: 6, 
+      color: 'from-gray-400 to-gray-600',
+      weeklyPoints: 120,
+      monthlyPoints: 480
+    },
+    { 
+      rank: 3, 
+      name: 'Phạm Thị D', 
+      level: getStudentLevel(2480), 
+      points: 2480, 
+      avatar: 'D', 
+      streak: 8, 
+      wins: 5, 
+      color: 'from-orange-400 to-orange-600',
+      weeklyPoints: 100,
+      monthlyPoints: 400
+    },
+    { 
+      rank: 4, 
+      name: 'Hoàng Văn E', 
+      level: getStudentLevel(2320), 
+      points: 2320, 
+      avatar: 'E', 
+      streak: 5, 
+      wins: 4, 
+      color: 'from-blue-400 to-blue-600',
+      weeklyPoints: 80,
+      monthlyPoints: 320
+    },
+    { 
+      rank: 5, 
+      name: 'Nguyễn Văn A', 
+      level: getStudentLevel(450), 
+      points: 450, 
+      avatar: 'A', 
+      streak: 12, 
+      wins: 3, 
+      color: 'from-green-400 to-green-600',
+      weeklyPoints: 60,
+      monthlyPoints: 240
+    }
   ];
 
   // Dữ liệu Streak
@@ -343,6 +424,59 @@ const courses = [
           </div>
         </div>
 
+        {/* User Level & Points Info */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="p-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold">Cấp độ hiện tại</h3>
+                <p className="text-2xl font-bold">{currentUser.level.name}</p>
+                <p className="text-sm opacity-90">{currentUser.level.description}</p>
+              </div>
+              <div className="text-right">
+                <div className="text-3xl font-bold">{currentUser.points}</div>
+                <div className="text-sm opacity-90">điểm</div>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-6 bg-gradient-to-r from-green-500 to-teal-600 text-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold">Tiến độ cấp độ</h3>
+                <p className="text-sm opacity-90">
+                  {getProgressToNextLevel(currentUser.points).target === 'Max' 
+                    ? 'Đã đạt cấp cao nhất!' 
+                    : `${getProgressToNextLevel(currentUser.points).current}/${getProgressToNextLevel(currentUser.points).target} điểm`
+                  }
+                </p>
+              </div>
+              <div className="text-right">
+                <div className="text-3xl font-bold">{Math.round(getProgressToNextLevel(currentUser.points).progress)}%</div>
+                <div className="w-16 h-2 bg-white/30 rounded-full mt-2">
+                  <div 
+                    className="h-full bg-white rounded-full transition-all duration-300"
+                    style={{ width: `${getProgressToNextLevel(currentUser.points).progress}%` }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-6 bg-gradient-to-r from-orange-500 to-red-600 text-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold">Streak hiện tại</h3>
+                <p className="text-2xl font-bold">{currentUser.streak} ngày</p>
+                <p className="text-sm opacity-90">Tổng: {currentUser.totalStudyDays} ngày</p>
+              </div>
+              <div className="text-right">
+                <Flame className="w-8 h-8 opacity-80" />
+              </div>
+            </div>
+          </Card>
+        </div>
+
         < PointInfor />
 
         {/* Streak Card */}
@@ -496,6 +630,29 @@ const courses = [
                     </h2>
                     <p className="text-gray-600 text-sm">{course.description}</p>
 
+                    {/* Pricing */}
+                    <div className="flex items-center justify-between">
+                      {course.isFree ? (
+                        <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
+                          Miễn phí
+                        </span>
+                      ) : (
+                        <div className="flex items-center space-x-2">
+                          <span className="text-lg font-bold text-blue-600">
+                            {course.price} điểm
+                          </span>
+                          {course.originalPrice > course.price && (
+                            <span className="text-sm text-gray-500 line-through">
+                              {course.originalPrice} điểm
+                            </span>
+                          )}
+                        </div>
+                      )}
+                      <div className="text-xs text-gray-500">
+                        Cần {course.pointsRequired} điểm
+                      </div>
+                    </div>
+
                     {/* Progress */}
                     <div>
                       <div className="flex justify-between text-sm font-medium text-gray-700 mb-1">
@@ -533,6 +690,11 @@ const courses = [
                               <p className="text-xs text-gray-600">
                                 Hoàn thành: {lesson.completedDate || 'Chưa hoàn thành'}
                               </p>
+                              {lesson.pointsEarned > 0 && (
+                                <p className="text-xs text-green-600 font-medium">
+                                  +{lesson.pointsEarned} điểm
+                                </p>
+                              )}
                               <p className="text-xs text-gray-600">
                                 Tiến trình: {lesson.progress}%
                               </p>
@@ -596,7 +758,7 @@ const courses = [
                     {/* Name */}
           <div className="font-semibold text-lg text-gray-900 mb-1">{user.name}</div>
           {/* Level và số chiến thắng */}
-          <div className="text-sm text-gray-600 mb-2">{user.level} • {user.wins} chiến thắng</div>
+          <div className="text-sm text-gray-600 mb-2">{user.level.name} • {user.wins} chiến thắng</div>
           {/* Điểm và streak */}
           <div className="font-bold text-indigo-700 text-lg">{user.points} điểm</div>
           <div className="text-sm text-gray-500 mt-1">Streak: {user.streak} ngày</div>
@@ -633,7 +795,7 @@ const courses = [
                 {user.name}
               </h3>
               <p className="text-sm text-gray-500">
-                Level {user.level} • {user.wins} chiến thắng
+                {user.level.name} • {user.wins} chiến thắng
               </p>
             </div>
           </div>

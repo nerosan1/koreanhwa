@@ -35,8 +35,10 @@ import AdminLayout from '../../components/layout/AdminLayout';
 import Card from '../../components/common/Card';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
+import { useNavigate } from 'react-router-dom';
 
 const ContentManagement = () => {
+    const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
   const [filterLevel, setFilterLevel] = useState('all');
@@ -53,7 +55,11 @@ const ContentManagement = () => {
       uploadDate: '2024-01-15',
       status: 'published',
       thumbnail: 'https://via.placeholder.com/120x80',
-      description: 'Học cách chào hỏi cơ bản trong tiếng Hàn'
+      description: 'Học cách chào hỏi cơ bản trong tiếng Hàn',
+      price: 15, // điểm
+      originalPrice: 20,
+      isFree: false,
+      pointsRequired: 15
     },
     {
       id: 2,
@@ -65,7 +71,11 @@ const ContentManagement = () => {
       uploadDate: '2024-01-14',
       status: 'published',
       thumbnail: 'https://via.placeholder.com/120x80',
-      description: 'Từ vựng về các thành viên trong gia đình'
+      description: 'Từ vựng về các thành viên trong gia đình',
+      price: 10, // điểm
+      originalPrice: 15,
+      isFree: false,
+      pointsRequired: 10
     },
     {
       id: 3,
@@ -77,7 +87,11 @@ const ContentManagement = () => {
       uploadDate: '2024-01-13',
       status: 'draft',
       thumbnail: 'https://via.placeholder.com/120x80',
-      description: 'Học cách sử dụng thì hiện tại trong tiếng Hàn'
+      description: 'Học cách sử dụng thì hiện tại trong tiếng Hàn',
+      price: 25, // điểm
+      originalPrice: 30,
+      isFree: false,
+      pointsRequired: 25
     },
     {
       id: 4,
@@ -89,7 +103,43 @@ const ContentManagement = () => {
       uploadDate: '2024-01-12',
       status: 'published',
       thumbnail: 'https://via.placeholder.com/120x80',
-      description: 'Bài tập luyện kỹ năng nghe hiểu'
+      description: 'Bài tập luyện kỹ năng nghe hiểu',
+      price: 0, // miễn phí
+      originalPrice: 0,
+      isFree: true,
+      pointsRequired: 0
+    },
+    {
+      id: 5,
+      title: 'Video phát âm chuẩn',
+      type: 'video',
+      level: 'intermediate',
+      duration: '18:20',
+      views: 2100,
+      uploadDate: '2024-01-10',
+      status: 'published',
+      thumbnail: 'https://via.placeholder.com/120x80',
+      description: 'Hướng dẫn phát âm chuẩn tiếng Hàn',
+      price: 20, // điểm
+      originalPrice: 25,
+      isFree: false,
+      pointsRequired: 20
+    },
+    {
+      id: 6,
+      title: 'Từ vựng: Du lịch',
+      type: 'vocabulary',
+      level: 'intermediate',
+      duration: '12:15',
+      views: 1500,
+      uploadDate: '2024-01-08',
+      status: 'published',
+      thumbnail: 'https://via.placeholder.com/120x80',
+      description: 'Từ vựng về du lịch và giao thông',
+      price: 18, // điểm
+      originalPrice: 22,
+      isFree: false,
+      pointsRequired: 18
     }
   ];
 
@@ -174,18 +224,28 @@ const ContentManagement = () => {
     );
   };
 
-  const filteredContents = contents.filter(content => {
+  // Thêm state quản lý contents thay vì const
+  const [contentList, setContentList] = useState(contents);
+
+  const filteredContents = contentList.filter(content => {
     const matchesSearch = content.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          content.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesType = filterType === 'all' || content.type === filterType;
     const matchesLevel = filterLevel === 'all' || content.level === filterLevel;
     return matchesSearch && matchesType && matchesLevel;
   });
+// Hàm xóa
+    const handleDeleteContent = (id) => {
+      if (window.confirm("Bạn có chắc chắn muốn xóa nội dung này?")) {
+        setContentList(prev => prev.filter(c => c.id !== id));
+      }
+    };
 
-  const handleContentAction = (contentId, action) => {
-    console.log(`Action ${action} for content ${contentId}`);
-    // Implement actual action logic here
-  };
+    // Hàm sửa
+    const handleEditContent = () => {
+      navigate('/admin/content/update');
+    };
+
 
   return (
     <AdminLayout>
@@ -201,7 +261,7 @@ const ContentManagement = () => {
               <Upload className="w-4 h-4 mr-2" />
               Upload
             </Button>
-            <Button variant="primary">
+            <Button onClick={()=> navigate('/admin/content/create')} variant="primary">
               <Plus className="w-4 h-4 mr-2" />
               Tạo nội dung mới
             </Button>
@@ -457,32 +517,67 @@ const ContentManagement = () => {
                   </div>
                   {getStatusBadge(content.status)}
                 </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex space-x-2">
-                    <button
-                      onClick={() => handleContentAction(content.id, 'view')}
-                      className="text-blue-600 hover:text-blue-900"
-                    >
-                      <Eye className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => handleContentAction(content.id, 'edit')}
-                      className="text-green-600 hover:text-green-900"
-                    >
-                      <Edit className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => handleContentAction(content.id, 'delete')}
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      <Trash className="w-4 h-4" />
-                    </button>
+                
+                {/* Pricing */}
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center space-x-2">
+                    {content.isFree ? (
+                      <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
+                        Miễn phí
+                      </span>
+                    ) : (
+                      <div className="flex items-center space-x-2">
+                        <span className="text-lg font-bold text-blue-600">
+                          {content.price} điểm
+                        </span>
+                        {content.originalPrice > content.price && (
+                          <span className="text-sm text-gray-500 line-through">
+                            {content.originalPrice} điểm
+                          </span>
+                        )}
+                      </div>
+                    )}
                   </div>
-                  <Button variant="outline" size="sm">
-                    <Play className="w-3 h-3 mr-1" />
-                    Preview
-                  </Button>
+                  <div className="text-xs text-gray-500">
+                    Cần {content.pointsRequired} điểm
+                  </div>
                 </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex space-x-2">
+                      {/* Eye - disable */}
+                      <button
+                        disabled
+                        className="text-gray-400 cursor-not-allowed"
+                        title="Không thể xem trực tiếp"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </button>
+
+                      {/* Edit */}
+                      <button
+                        onClick={() => handleEditContent()}
+                        className="text-green-600 hover:text-green-900"
+                        title="Chỉnh sửa"
+                      >
+                        <Edit className="w-4 h-4" />
+                      </button>
+
+                      {/* Delete */}
+                      <button
+                        onClick={() => handleDeleteContent(content.id)}
+                        className="text-red-600 hover:text-red-900"
+                        title="Xóa"
+                      >
+                        <Trash className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    <Button variant="outline" size="sm">
+                      <Play className="w-3 h-3 mr-1" />
+                      Preview
+                    </Button>
+                  </div>
+
               </div>
             </Card>
           ))}

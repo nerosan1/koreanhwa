@@ -1,5 +1,6 @@
 import React from 'react';
 import { Users, BookOpen, FileText, BarChart3, TrendingUp, Calendar, Settings, Shield } from 'lucide-react';
+import { POINT_SYSTEM, getStudentLevel } from '../../utils/pointSystem';
 
 const AdminDashboard = () => {
   const stats = [
@@ -9,7 +10,12 @@ const AdminDashboard = () => {
       change: '+15%', 
       changeType: 'positive',
       icon: Users,
-      color: 'from-blue-500 to-cyan-500'
+      color: 'from-blue-500 to-cyan-500',
+      details: [
+        { label: 'Sơ cấp', count: 456, percentage: 37 },
+        { label: 'Trung cấp', count: 523, percentage: 42 },
+        { label: 'Cao cấp', count: 255, percentage: 21 }
+      ]
     },
     { 
       name: 'Tổng bài học', 
@@ -17,7 +23,11 @@ const AdminDashboard = () => {
       change: '+8%', 
       changeType: 'positive',
       icon: BookOpen,
-      color: 'from-green-500 to-emerald-500'
+      color: 'from-green-500 to-emerald-500',
+      details: [
+        { label: 'Miễn phí', count: 123, percentage: 22 },
+        { label: 'Trả phí', count: 444, percentage: 78 }
+      ]
     },
     { 
       name: 'Tài liệu', 
@@ -25,15 +35,26 @@ const AdminDashboard = () => {
       change: '+12%', 
       changeType: 'positive',
       icon: FileText,
-      color: 'from-purple-500 to-pink-500'
+      color: 'from-purple-500 to-pink-500',
+      details: [
+        { label: 'Video', count: 234, percentage: 26 },
+        { label: 'Từ vựng', count: 345, percentage: 39 },
+        { label: 'Ngữ pháp', count: 189, percentage: 21 },
+        { label: 'Bài tập', count: 122, percentage: 14 }
+      ]
     },
     { 
-      name: 'Báo cáo', 
-      value: '45', 
-      change: '+3%', 
+      name: 'Tổng điểm đã trao', 
+      value: '45,678', 
+      change: '+23%', 
       changeType: 'positive',
       icon: BarChart3,
-      color: 'from-orange-500 to-red-500'
+      color: 'from-orange-500 to-red-500',
+      details: [
+        { label: 'Tuần này', count: 2340, percentage: 5 },
+        { label: 'Tháng này', count: 12340, percentage: 27 },
+        { label: 'Tổng cộng', count: 45678, percentage: 100 }
+      ]
     }
   ];
 

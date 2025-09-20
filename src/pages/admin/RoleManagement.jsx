@@ -24,13 +24,14 @@ import {
   ResponsiveContainer 
 } from 'recharts';
 import AdminLayout from '../../components/layout/AdminLayout';
+import { useNavigate } from 'react-router-dom';
 import Card from '../../components/common/Card';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
 
 const RoleManagement = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
-  const [showAddModal, setShowAddModal] = useState(false);
   const [editingRole, setEditingRole] = useState(null);
   const [newRole, setNewRole] = useState({
     name: '',
@@ -146,6 +147,7 @@ const RoleManagement = () => {
 
   const handleEditRole = (role) => {
     setEditingRole(role);
+    navigate('/admin/roles/update')
     setNewRole({
       name: role.name,
       description: role.description,
@@ -410,82 +412,6 @@ const RoleManagement = () => {
             </table>
           </div>
         </Card>
-
-        {/* Add/Edit Modal */}
-        {showAddModal && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-            <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-              <div className="mt-3">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">
-                  {editingRole ? 'Chỉnh sửa vai trò' : 'Thêm vai trò mới'}
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Tên vai trò
-                    </label>
-                    <Input
-                      type="text"
-                      value={newRole.name}
-                      onChange={(e) => setNewRole({...newRole, name: e.target.value})}
-                      placeholder="Nhập tên vai trò"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Mô tả
-                    </label>
-                    <textarea
-                      value={newRole.description}
-                      onChange={(e) => setNewRole({...newRole, description: e.target.value})}
-                      placeholder="Nhập mô tả vai trò"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      rows="3"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Quyền hạn
-                    </label>
-                    <div className="space-y-2 max-h-40 overflow-y-auto">
-                      {permissions.map((permission) => (
-                        <label key={permission.id} className="flex items-center">
-                          <input
-                            type="checkbox"
-                            checked={newRole.permissions.includes(permission.id)}
-                            onChange={() => togglePermission(permission.id)}
-                            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                          />
-                          <span className="ml-2 text-sm text-gray-700">
-                            {permission.name}
-                          </span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="flex justify-end space-x-3 mt-6">
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setShowAddModal(false);
-                      setEditingRole(null);
-                      setNewRole({ name: '', description: '', permissions: [] });
-                    }}
-                  >
-                    Hủy
-                  </Button>
-                  <Button
-                    variant="primary"
-                    onClick={editingRole ? handleUpdateRole : handleAddRole}
-                  >
-                    {editingRole ? 'Cập nhật' : 'Thêm'}
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </AdminLayout>
   );

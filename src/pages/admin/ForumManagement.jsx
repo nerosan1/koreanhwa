@@ -33,8 +33,10 @@ import AdminLayout from '../../components/layout/AdminLayout';
 import Card from '../../components/common/Card';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
+import { useNavigate } from 'react-router-dom';
 
 const ForumManagement = () => {
+    const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterCategory, setFilterCategory] = useState('all');
@@ -227,7 +229,7 @@ const ForumManagement = () => {
               <Flag className="w-4 h-4 mr-2" />
               Báo cáo vi phạm
             </Button>
-            <Button variant="primary">
+            <Button onClick={()=> navigate('/admin/forum/create')}   variant="primary">
               <Plus className="w-4 h-4 mr-2" />
               Tạo bài viết
             </Button>

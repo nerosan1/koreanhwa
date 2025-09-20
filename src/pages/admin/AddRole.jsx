@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Shield, 
   ArrowLeft, 
@@ -13,18 +13,47 @@ import Card from '../../components/common/Card';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
 
-
-const AddRole = () => {
+const RoleUpdate = () => {
   const [formData, setFormData] = useState({
+    id: null,
     name: '',
     description: '',
     permissions: [],
     color: '#3B82F6',
-    isActive: true
+    isActive: true,
+    userCount: 0,
+    createdAt: '',
+    lastUpdated: ''
   });
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  // Mock load existing role data
+  useEffect(() => {
+    const loadRoleData = () => {
+      setLoading(true);
+      // Simulate API call
+      setTimeout(() => {
+        const existingRole = {
+          id: 2,
+          name: 'Moderator',
+          description: 'Điều hành viên diễn đàn và nội dung với quyền quản lý các hoạt động của người dùng',
+          permissions: ['content.view', 'content.edit', 'forum.view', 'forum.moderate', 'reports.view'],
+          color: '#10B981',
+          isActive: true,
+          userCount: 12,
+          createdAt: '2023-03-10',
+          lastUpdated: '2024-01-18'
+        };
+        setFormData(existingRole);
+        setLoading(false);
+      }, 1500);
+    };
+
+    loadRoleData();
+  }, []);
 
   const allPermissions = {
     'user_management': {
@@ -196,8 +225,8 @@ const AddRole = () => {
       // Success - redirect to roles list
       window.location.href = '/admin/roles';
     } catch (error) {
-      console.error('Error creating role:', error);
-      setErrors({ submit: 'Có lỗi xảy ra khi tạo vai trò. Vui lòng thử lại.' });
+      console.error('Error updating role:', error);
+      setErrors({ submit: 'Có lỗi xảy ra khi cập nhật vai trò. Vui lòng thử lại.' });
     } finally {
       setIsSubmitting(false);
     }
@@ -208,28 +237,60 @@ const AddRole = () => {
     return formData.permissions.filter(id => categoryPermissions.includes(id)).length;
   };
 
+  if (loading) {
+    return (
+      <AdminLayout>
+        <div className="flex items-center justify-center min-h-96">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <h3 className="text-lg font-semibold text-gray-700 mb-2">Đang tải dữ liệu vai trò</h3>
+            <p className="text-gray-500">Vui lòng chờ trong giây lát...</p>
+          </div>
+        </div>
+      </AdminLayout>
+    );
+  }
+
   return (
     <AdminLayout>
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <Link
-              to="/admin/roles"
-              className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5 mr-2" />
-              Quay lại
-            </Link>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Thêm vai trò mới</h1>
-              <p className="text-gray-600">Tạo vai trò mới với các quyền hạn tùy chỉnh</p>
+              <h1 className="text-2xl font-bold text-gray-900">Cập nhật vai trò</h1>
+              <p className="text-gray-600">Chỉnh sửa thông tin và quyền hạn của vai trò</p>
+              <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+                <span>ID: {formData.id}</span>
+                <span>•</span>
+                <span>Tạo: {formData.createdAt}</span>
+                <span>•</span>
+                <span>Cập nhật: {formData.lastUpdated}</span>
+                <span>•</span>
+                <span>{formData.userCount} người dùng</span>
+              </div>
             </div>
           </div>
           <div className="flex items-center space-x-2">
             <Shield className="w-6 h-6 text-blue-600" />
           </div>
         </div>
+
+        {/* Warning if role has users */}
+        {formData.userCount > 0 && (
+          <Card className="p-4 bg-yellow-50 border-yellow-200">
+            <div className="flex items-start space-x-3">
+              <XCircle className="w-5 h-5 text-yellow-600 mt-0.5" />
+              <div>
+                <h3 className="text-sm font-medium text-yellow-800">Cảnh báo</h3>
+                <p className="text-sm text-yellow-700 mt-1">
+                  Vai trò này đang được sử dụng bởi {formData.userCount} người dùng. 
+                  Việc thay đổi quyền hạn có thể ảnh hưởng đến quyền truy cập của họ.
+                </p>
+              </div>
+            </div>
+          </Card>
+        )}
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -317,6 +378,10 @@ const AddRole = () => {
                     <span className="font-medium">
                       {formData.isActive ? 'Hoạt động' : 'Không hoạt động'}
                     </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Người dùng:</span>
+                    <span className="font-medium">{formData.userCount}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Số quyền hạn:</span>
@@ -425,12 +490,12 @@ const AddRole = () => {
               {isSubmitting ? (
                 <div className="flex items-center">
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Đang tạo...
+                  Đang cập nhật...
                 </div>
               ) : (
                 <div className="flex items-center">
                   <CheckCircle className="w-4 h-4 mr-2" />
-                  Tạo vai trò
+                  Cập nhật vai trò
                 </div>
               )}
             </Button>
@@ -441,4 +506,4 @@ const AddRole = () => {
   );
 };
 
-export default AddRole; 
+export default RoleUpdate;

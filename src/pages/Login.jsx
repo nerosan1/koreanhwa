@@ -122,7 +122,7 @@ const Login = () => {
                 placeholder="Enter your email address"
                 leftIcon={<Mail className="w-5 h-5 text-black-400" />}
                 error={errors.email}
-                inputClassName="bg-gray-900 border-yellow-400 text-black-300 placeholder-yellow-500 focus:border-yellow-500 focus:ring-yellow-500"
+                className="bg-gray-900 border-yellow-400 text-black-300 placeholder-yellow-500 focus:border-yellow-500 focus:ring-yellow-500"
                 required
               />
               <Input
@@ -144,7 +144,7 @@ const Login = () => {
                   </button>
                 }
                 error={errors.password}
-                inputClassName="bg-gray-900 border-yellow-400 text-black-300 placeholder-yellow-500 focus:border-yellow-500 focus:ring-yellow-500"
+                className="bg-gray-900 border-yellow-400 text-black-300 placeholder-yellow-500 focus:border-yellow-500 focus:ring-yellow-500"
                 required
               />
               <div className="flex items-center justify-between text-black-300">

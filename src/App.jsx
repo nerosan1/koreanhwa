@@ -8,16 +8,26 @@ import UserManagement from './pages/admin/UserManagement.jsx';
 import ContentManagement from './pages/admin/ContentManagement';
 import RoleManagement from './pages/admin/RoleManagement';
 import ForumManagement from './pages/admin/ForumManagement';
+import ForumCreate from './pages/admin/ForumCreate.jsx';
+import ForumUpdate from './pages/admin/ForumUpdate.jsx';
 import DictionaryManagement from './pages/admin/DictionaryManagement';
+import DictionaryAdd from './pages/admin/DictionaryAdd.jsx';
+import DictionaryUpdate from './pages/admin/DictionaryUpdate';
 import ProgressManagement from './pages/admin/ProgressManagement';
 import ReportsManagement from './pages/admin/ReportsManagement';
 import SettingsManagement from './pages/admin/SettingsManagement.jsx';
 import MaterialsManagement from './pages/admin/MaterialsManagement';
+import MaterialsAdd from './pages/admin/MaterialsAdd';
+import MaterialsUpdate from './pages/admin/MaterialsUpdate';
 import ExamManagement from './pages/admin/ExamManagement';
+import ExamMaterialAdd from './pages/admin/ExamMaterialAdd';
+import ExamUpdate from './pages/admin/ExamUpdate';
 import AISystemMonitoring from './pages/admin/AISystemMonitoring';
 import AddUser from './pages/admin/UserAdd.jsx';
-import CreateContent from './pages/admin/CreateContent.jsx';
+import CreateContent from './pages/admin/ContentCreate.jsx';
+import CreateUpdate from './pages/admin/ContentUpdate.jsx';
 import AddRole from './pages/admin/AddRole.jsx';
+import UpdateRole from './pages/admin/UpdateRole.jsx';
 import UserInfo from './pages/admin/UserInfo.jsx';
 import UserEdit from './pages/admin/UserUpdate.jsx';
 
@@ -75,15 +85,25 @@ function App() {
         <Route path="/admin/users/update" element={<UserEdit />} />
         <Route path="/admin/content" element={<ContentManagement />} />
         <Route path="/admin/content/create" element={<CreateContent />} />
+        <Route path="/admin/content/update" element={<CreateUpdate />} />
         <Route path="/admin/roles" element={<RoleManagement />} />
         <Route path="/admin/roles/add" element={<AddRole />} />
+        <Route path="/admin/roles/update" element={<UpdateRole />} />
         <Route path="/admin/forum" element={<ForumManagement />} />
+        <Route path="/admin/forum/create" element={<ForumCreate />} />
+        <Route path="/admin/forum/update" element={<ForumUpdate />} />
         <Route path="/admin/dictionary" element={<DictionaryManagement />} />
+        <Route path="/admin/dictionary/add" element={<DictionaryAdd />} />
+        <Route path="/admin/dictionary/update" element={<DictionaryUpdate />} />
         <Route path="/admin/progress" element={<ProgressManagement />} />
         <Route path="/admin/reports" element={<ReportsManagement />} />
         <Route path="/admin/settings" element={<SettingsManagement />} />
         <Route path="/admin/materials" element={<MaterialsManagement />} />
+        <Route path="/admin/materials/add" element={<MaterialsAdd />} />
+        <Route path="/admin/materials/update/:id" element={<MaterialsUpdate />} />
         <Route path="/admin/exams" element={<ExamManagement />} />
+        <Route path="/admin/exams/add" element={<ExamMaterialAdd />} />
+        <Route path="/admin/exams/update/:id" element={<ExamUpdate />} />
         <Route path="/admin/ai-monitoring" element={<AISystemMonitoring />} />
         
         {/* Student Routes */}

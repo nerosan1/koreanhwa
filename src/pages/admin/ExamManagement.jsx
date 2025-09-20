@@ -35,8 +35,10 @@ import AdminLayout from '../../components/layout/AdminLayout';
 import Card from '../../components/common/Card';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
+import { useNavigate } from 'react-router-dom';
 
 const ExamManagement = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterLevel, setFilterLevel] = useState('all');
@@ -72,7 +74,13 @@ const ExamManagement = () => {
       averageScore: 75,
       createdBy: 'admin',
       createdAt: '2024-01-15',
-      lastUpdated: '2024-01-20'
+      lastUpdated: '2024-01-20',
+      totalPoints: 120,
+      questions: [
+        { id: 1, points: 2, type: 'multiple-choice' },
+        { id: 2, points: 1, type: 'true-false' },
+        { id: 3, points: 3, type: 'multiple-choice' }
+      ]
     },
     {
       id: 2,
@@ -90,7 +98,13 @@ const ExamManagement = () => {
       averageScore: 0,
       createdBy: 'admin',
       createdAt: '2024-01-18',
-      lastUpdated: '2024-01-19'
+      lastUpdated: '2024-01-19',
+      totalPoints: 150,
+      questions: [
+        { id: 1, points: 3, type: 'multiple-choice' },
+        { id: 2, points: 2, type: 'true-false' },
+        { id: 3, points: 4, type: 'fill-blank' }
+      ]
     },
     {
       id: 3,
@@ -108,7 +122,12 @@ const ExamManagement = () => {
       averageScore: 82,
       createdBy: 'teacher1',
       createdAt: '2024-01-10',
-      lastUpdated: '2024-01-26'
+      lastUpdated: '2024-01-26',
+      totalPoints: 90,
+      questions: [
+        { id: 1, points: 3, type: 'multiple-choice' },
+        { id: 2, points: 2, type: 'true-false' }
+      ]
     },
     {
       id: 4,
@@ -126,7 +145,11 @@ const ExamManagement = () => {
       averageScore: 0,
       createdBy: 'teacher2',
       createdAt: '2024-01-20',
-      lastUpdated: '2024-01-20'
+      lastUpdated: '2024-01-20',
+      totalPoints: 75,
+      questions: [
+        { id: 1, points: 3, type: 'multiple-choice' }
+      ]
     }
   ]);
 
@@ -232,19 +255,7 @@ const ExamManagement = () => {
   };
 
   const handleEditExam = (exam) => {
-    setEditingExam(exam);
-    setNewExam({
-      title: exam.title,
-      description: exam.description,
-      level: exam.level,
-      duration: exam.duration,
-      totalQuestions: exam.totalQuestions,
-      passingScore: exam.passingScore,
-      startDate: exam.startDate,
-      endDate: exam.endDate,
-      status: exam.status
-    });
-    setShowAddModal(true);
+    navigate(`/admin/exams/update/${exam.id}`);
   };
 
   const handleUpdateExam = () => {
@@ -296,7 +307,7 @@ const ExamManagement = () => {
               <BarChart3 className="w-4 h-4 mr-2" />
               Báo cáo
             </Button>
-            <Button variant="primary" onClick={() => setShowAddModal(true)}>
+            <Button variant="primary" onClick={() => navigate('/admin/exams/add')}>
               <Plus className="w-4 h-4 mr-2" />
               Tạo kỳ thi
             </Button>
@@ -521,6 +532,9 @@ const ExamManagement = () => {
                     Thống kê
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Câu hỏi
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Trạng thái
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -557,7 +571,8 @@ const ExamManagement = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">{exam.duration} phút</div>
-                      <div className="text-xs text-gray-500">Điểm đạt: {exam.passingScore}</div>
+                      <div className="text-xs text-gray-500">Điểm đạt: {exam.passingScore}%</div>
+                      <div className="text-xs text-blue-600">Tổng điểm: {exam.totalPoints || 0}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">
@@ -565,6 +580,19 @@ const ExamManagement = () => {
                         <div>Hoàn thành: {exam.completedStudents}</div>
                         {exam.averageScore > 0 && (
                           <div>Điểm TB: {exam.averageScore}</div>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        <div>{exam.totalQuestions} câu</div>
+                        <div className="text-xs text-blue-600">
+                          {exam.questions?.length || 0} đã tạo
+                        </div>
+                        {exam.questions && exam.questions.length > 0 && (
+                          <div className="text-xs text-gray-500">
+                            {exam.questions.map(q => q.type).join(', ')}
+                          </div>
                         )}
                       </div>
                     </td>

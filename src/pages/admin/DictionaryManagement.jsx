@@ -31,8 +31,10 @@ import AdminLayout from '../../components/layout/AdminLayout';
 import Card from '../../components/common/Card';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
+import { useNavigate } from 'react-router-dom';
 
 const DictionaryManagement = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterLevel, setFilterLevel] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
@@ -235,6 +237,7 @@ const DictionaryManagement = () => {
 
   const handleEditWord = (word) => {
     setEditingWord(word);
+    navigate('/admin/dictionary/update');
     setNewWord({
       korean: word.korean,
       vietnamese: word.vietnamese,
@@ -326,8 +329,7 @@ const DictionaryManagement = () => {
               <Download className="w-4 h-4 mr-2" />
               Export
             </Button>
-            <Button variant="primary" onClick={() => setShowAddModal(true)}>
-              <Plus className="w-4 h-4 mr-2" />
+            <Button onClick={()=> navigate('/admin/dictionary/add')}  variant="outline">
               Thêm từ mới
             </Button>
           </div>
@@ -584,7 +586,7 @@ const DictionaryManagement = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex items-center justify-end space-x-2">
                         <button
-                          onClick={() => handleEditWord(word)}
+                          onClick={()=> navigate('/admin/dictionary/update')} 
                           className="text-blue-600 hover:text-blue-900"
                         >
                           <Edit className="w-4 h-4" />
@@ -620,133 +622,6 @@ const DictionaryManagement = () => {
           </div>
         </Card>
 
-        {/* Add/Edit Modal */}
-        {showAddModal && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-            <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-              <div className="mt-3">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">
-                  {editingWord ? 'Chỉnh sửa từ vựng' : 'Thêm từ vựng mới'}
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Từ tiếng Hàn
-                    </label>
-                    <Input
-                      type="text"
-                      value={newWord.korean}
-                      onChange={(e) => setNewWord({...newWord, korean: e.target.value})}
-                      placeholder="Nhập từ tiếng Hàn"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Nghĩa tiếng Việt
-                    </label>
-                    <Input
-                      type="text"
-                      value={newWord.vietnamese}
-                      onChange={(e) => setNewWord({...newWord, vietnamese: e.target.value})}
-                      placeholder="Nhập nghĩa tiếng Việt"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Nghĩa tiếng Anh
-                    </label>
-                    <Input
-                      type="text"
-                      value={newWord.english}
-                      onChange={(e) => setNewWord({...newWord, english: e.target.value})}
-                      placeholder="Nhập nghĩa tiếng Anh"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Phát âm
-                    </label>
-                    <Input
-                      type="text"
-                      value={newWord.pronunciation}
-                      onChange={(e) => setNewWord({...newWord, pronunciation: e.target.value})}
-                      placeholder="Nhập phát âm"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Cấp độ
-                      </label>
-                      <select
-                        value={newWord.level}
-                        onChange={(e) => setNewWord({...newWord, level: e.target.value})}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
-                        {levels.map(level => (
-                          <option key={level.id} value={level.id}>{level.name}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Danh mục
-                      </label>
-                      <select
-                        value={newWord.category}
-                        onChange={(e) => setNewWord({...newWord, category: e.target.value})}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      >
-                        {categories.map(category => (
-                          <option key={category.id} value={category.id}>{category.name}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Ví dụ
-                    </label>
-                    <textarea
-                      value={newWord.example}
-                      onChange={(e) => setNewWord({...newWord, example: e.target.value})}
-                      placeholder="Nhập ví dụ sử dụng"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      rows="3"
-                    />
-                  </div>
-                </div>
-                <div className="flex justify-end space-x-3 mt-6">
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setShowAddModal(false);
-                      setEditingWord(null);
-                      setNewWord({
-                        korean: '',
-                        vietnamese: '',
-                        english: '',
-                        pronunciation: '',
-                        level: 'beginner',
-                        category: 'general',
-                        example: '',
-                        status: 'approved'
-                      });
-                    }}
-                  >
-                    Hủy
-                  </Button>
-                  <Button
-                    variant="primary"
-                    onClick={editingWord ? handleUpdateWord : handleAddWord}
-                  >
-                    {editingWord ? 'Cập nhật' : 'Thêm'}
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </AdminLayout>
   );
